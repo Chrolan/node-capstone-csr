@@ -7,6 +7,8 @@ const passport = require('passport');
 
 mongoose.Promise = global.Promise;
 
+const { router: usersRouter } = require('./users');
+const { router: authRouter, localStrategy, jwtStrategy } = require('./auth');
 
 const { PORT, DATABASE_URL } = require('./config');
 
@@ -28,8 +30,8 @@ app.use(function (req, res, next) {
 passport.use(localStrategy);
 passport.use(jwtStrategy);
 
-app.use('/api/users/', usersRouter);
-app.use('/api/auth/', authRouter);
+app.use('/users/', usersRouter);
+app.use('/auth/', authRouter);
 
 app.use('*', (req, res) => {
   return res.status(404).json({ message: 'Not Found' });

@@ -38,15 +38,13 @@ UserSchema.methods.validatePassword = function(password) {
 
 UserSchema.methods.serialize = function () {
     return {
-
+        name: `${this.firstName} ${this.lastName}`
     }
-}
+};
 
 UserSchema.statics.hashPassword = function(password) {
     return bcrypt.hash(password, 10);
 };
-
-
 
 const User = mongoose.model('User', UserSchema);
 
