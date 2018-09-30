@@ -38,7 +38,7 @@ UserSchema.methods.validatePassword = function(password) {
 
 UserSchema.methods.serialize = function () {
     return {
-        
+
     }
 }
 
