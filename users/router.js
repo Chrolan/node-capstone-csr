@@ -135,12 +135,16 @@ router.delete('/',jsonParser,(req,res) => {
 
     let { username, client } = req.body;
 
-    User.find({username:username, client:client})
+    User.findOne({username,client})
         .then(user => {
-            console.log(user);
-            User.findOneAndDelete(user)
-                .then(res.status(204).json({message: 'success'}))
-                .catch(err => res.status(500).json({message: 'Could not find user'}))
+            console.log(typeof (user));
+            if(user != null && Object.keys(user).length > 0) {
+                User.findOneAndDelete(user)
+                    .then(res.status(202).json({message: 'Success'}))
+                    .catch(err => res.status(500).json({message: 'Could not find user'}))
+
+            }
+            else res.status(500).json({message: 'Could not find user'})
         })
         .catch( err => res.status(500).json({message: 'Could not find user'}))
 });
