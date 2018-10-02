@@ -6,6 +6,9 @@ const { User } = require('./models');
 
 const router = express.Router();
 
+const mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
+
 const jsonParser = bodyParser.json();
 
 router.get('/', jsonParser, (req,res) => {
@@ -61,9 +64,7 @@ router.post('/', jsonParser, (req,res) => {
     },
     password: {
       min: 10,
-      // bcrypt truncates after 72 characters, so let's not give the illusion
-      // of security by storing extra (unused) info
-      max: 72
+      max: 25
     }
   };
 
@@ -94,7 +95,6 @@ router.post('/', jsonParser, (req,res) => {
   let { username, password, firstName, lastName, email, client} = req.body;
 
   return User.find({username})
-    .count()
     .then(count => {
       if (count > 0) {
         // There is an existing user with the same username
@@ -129,6 +129,20 @@ router.post('/', jsonParser, (req,res) => {
       }
       res.status(500).json({code: 500, message: 'Internal server error'});
     });
+});
+
+router.delete('/',jsonParser,(req,res) => {
+
+    let { username, client } = req.body;
+
+    User.find({username:username, client:client})
+        .then(user => {
+            console.log(user);
+            User.findOneAndDelete(user)
+                .then(res.status(204).json({message: 'success'}))
+                .catch(err => res.status(500).json({message: 'Could not find user'}))
+        })
+        .catch( err => res.status(500).json({message: 'Could not find user'}))
 });
 
 module.exports = { router };

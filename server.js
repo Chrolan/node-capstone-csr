@@ -9,6 +9,7 @@ mongoose.Promise = global.Promise;
 
 const { router: usersRouter } = require('./users');
 const { router: authRouter, localStrategy, jwtStrategy } = require('./auth');
+const { router: customerRouter } = require('./customers');
 
 const { PORT, DATABASE_URL } = require('./config');
 
@@ -30,8 +31,20 @@ app.use(function (req, res, next) {
 passport.use(localStrategy);
 passport.use(jwtStrategy);
 
+
 app.use('/users/', usersRouter);
 app.use('/auth/', authRouter);
+
+//app.use('/customers/', customerRouter);
+
+const jwtAuth = passport.authenticate('jwt', { session: false });
+
+app.get('/api/protected', jwtAuth, (req, res) => {
+  return res.json({
+    data: 'rosebud'
+  });
+});
+
 
 app.use('*', (req, res) => {
   return res.status(404).json({ message: 'Not Found' });
@@ -41,7 +54,7 @@ let server;
 
 function runServer() {
   return new Promise((resolve, reject) => {
-    mongoose.connect(DATABASE_URL, { useMongoClient: true }, err => {
+    mongoose.connect(DATABASE_URL, err => {
       if (err) {
         return reject(err);
       }

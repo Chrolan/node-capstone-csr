@@ -11,11 +11,11 @@ mongoose.Promise = global.Promise;
 
 const jsonParser = bodyParser.json();
 
-
+/*
 router.('/', jsonParser, (req,res) => {
 
 });
-
+*/
 
 
 module.export = { router };
