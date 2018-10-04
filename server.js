@@ -31,12 +31,12 @@ app.use(function (req, res, next) {
 passport.use(localStrategy);
 passport.use(jwtStrategy);
 
-
-app.use('/users/', usersRouter);
-app.use('/auth/', authRouter);
-app.use('/customers/', customerRouter);
-
 const jwtAuth = passport.authenticate('jwt', { session: false });
+
+
+app.use('/users/', jwtAuth, usersRouter);
+app.use('/auth/', jwtAuth, authRouter);
+app.use('/customers/',jwtAuth, customerRouter);
 
 app.get('/api/protected', jwtAuth, (req, res) => {
   return res.json({
@@ -53,7 +53,7 @@ let server;
 
 function runServer() {
   return new Promise((resolve, reject) => {
-    mongoose.connect(DATABASE_URL, err => {
+    mongoose.connect(DATABASE_URL,  { useNewUrlParser: true } , err => {
       if (err) {
         return reject(err);
       }

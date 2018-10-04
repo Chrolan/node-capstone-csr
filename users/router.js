@@ -134,19 +134,27 @@ router.post('/', jsonParser, (req,res) => {
 router.delete('/', jsonParser,(req,res) => {
 
     let { username, client } = req.body;
+    console.log(username, client);
 
     User.findOne({username,client})
         .then(user => {
-            console.log(typeof (user));
+            console.log(user);
             if(user != null && Object.keys(user).length > 0) {
-                User.findOneAndDelete(user)
+                User.deleteOne(user)
                     .then(res.status(202).json({message: 'Success'}))
-                    .catch(err => res.status(500).json({message: 'Could not find user'}))
-
+                    .catch(err => {
+                            console.log(err);
+                            res.status(500).json({message: 'Error deleting user'})
+                        })
             }
-            else res.status(500).json({message: 'Could not find user'})
+            else {
+                res.status(500).json({message: 'User not found'});
+            }
         })
-        .catch( err => res.status(500).json({message: 'Could not find user'}))
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({message: 'Error in request'})
+        })
 });
 
 module.exports = { router };
