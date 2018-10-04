@@ -131,7 +131,7 @@ router.post('/', jsonParser, (req,res) => {
     });
 });
 
-router.delete('/',jsonParser,(req,res) => {
+router.delete('/', jsonParser,(req,res) => {
 
     let { username, client } = req.body;
 
