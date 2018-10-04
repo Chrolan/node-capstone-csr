@@ -34,9 +34,9 @@ passport.use(jwtStrategy);
 const jwtAuth = passport.authenticate('jwt', { session: false });
 
 
-app.use('/users/', jwtAuth, usersRouter);
-app.use('/auth/', jwtAuth, authRouter);
-app.use('/customers/',jwtAuth, customerRouter);
+app.use('/users/', usersRouter);
+app.use('/auth/', authRouter);
+app.use('/customers/', customerRouter);
 
 app.get('/api/protected', jwtAuth, (req, res) => {
   return res.json({

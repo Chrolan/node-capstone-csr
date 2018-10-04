@@ -30,7 +30,28 @@ router.get('/customer', jsonParser, (req,res) => {
        })
 });
 
-//customer creation 
+router.delete('/customer', jsonParser, (req,res) => {
+
+    Customer.findOne({'customerName.lastName':req.body.customerName.lastName, customerClient:req.body.customerClient, customerBillingAccount: req.body.customerBillingAccount})
+        .then(customer => {
+             if(customer != null && Object.keys(customer).length > 0) {
+                Customer.deleteOne(customer)
+                    .then(res.status(400).json({message:'Success'}))
+                    .catch(err => {
+                            console.log(err);
+                            res.status(500).json({message: 'Error deleting user'})
+                        })
+            }
+            else {
+                res.status(400).json({message: 'Customer does not exist'})
+            }})
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({message: 'Server Error'})
+        })
+});
+
+//customer creation endpoint
 router.post('/customer', jsonParser, (req,res) => {
 
     const requiredFields = ['customerType','customerName','customerAddress','customerBillingAccount','customerPhone'];
@@ -43,9 +64,8 @@ router.post('/customer', jsonParser, (req,res) => {
         }
     });
 
-    console.log(req.body);
-
-    Customer.find({customerName:req.body.customerName, customerClient:req.body.customerClient, customerBillingAccount: req.body.customerBillingAccount})
+    //First finds customer based on 3 attributes, if none found then creates.
+    Customer.findOne({customerName:req.body.customerName.lastName, customerClient:req.body.customerClient, customerBillingAccount: req.body.customerBillingAccount})
         .then(customer => {
             console.log(customer);
             if(customer != null && Object.keys(customer).length > 0) {
