@@ -32,15 +32,18 @@ const deviceSchema = mongoose.Schema({
     deviceMac: {type: String, required: true},
 });
 
-const circuitSchema = mongoose.Schema ({
+const circuitSchema = mongoose.Schema({
+   circuitId: {type: String, required: true},
    zLocationDevice : {
-        device: {type: mongoose.Schema.Object, ref: 'Device'},
-        devicePort: {type: String, required: true},
-   },
+        deviceInfo:{
+            device:{type: mongoose.Schema.ObjectId, ref: 'Device'},
+            devicePort: {type: String, required: true},
+   }},
     aLocationDevice : {
-        device: {type: mongoose.Schema.Object, ref: 'Device'},
-        devicePort: {type: String, required: true},
-   },
+        deviceInfo:{
+            device:{type: mongoose.Schema.ObjectId, ref: 'Device'},
+            devicePort: {type: String, required: true},
+   }},
     deviceAdditionalInformation: {type: String}
 });
 
@@ -76,8 +79,15 @@ customerSchema.methods.serialize = function () {
         customerName : this.nameOfCustomer,
         customerBillingAccount: this.customerBillingAccount,
     }
+};
 
-}
+deviceSchema.methods.serialize = function () {
+    return {
+        id: this._id,
+        deviceName: this.deviceName,
+        deviceSerialNumber: this.deviceSerialNumber
+    }
+};
 
 const Service = mongoose.model('Service', serviceSchema);
 const Device = mongoose.model('Device', deviceSchema);

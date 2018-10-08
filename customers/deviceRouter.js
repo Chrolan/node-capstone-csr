@@ -16,7 +16,7 @@ const jsonParser = bodyParser.json();
 router.get('/device/', jsonParser, (req,res) => {
 
     const filters = {};
-    const queryFields = ['deviceName','deviceModel','deviceSerialNumber','deviceMac'];
+    const queryFields = ['deviceName','deviceManufacturer','deviceModel','deviceSerialNumber','deviceMac'];
 
     //appends fields to filters object, which is later used by Device.find in filtering mongo search
     queryFields.forEach(field => {
@@ -30,7 +30,7 @@ router.get('/device/', jsonParser, (req,res) => {
        .sort({'deviceName': 1})
        .then(devices => {
            res.json({devices: devices.map(device => {
-               return Device.serialize()
+               return device.serialize()
            })})
    })
    .catch(err => {
@@ -42,7 +42,7 @@ router.get('/device/', jsonParser, (req,res) => {
 //device creation endpoint
 router.post('/device', jsonParser, (req,res) => {
 
-    const requiredFields = ['deviceName','deviceModel','deviceSerialNumber','deviceMac'];
+    const requiredFields = ['deviceName','deviceModel','deviceSerialNumber','deviceMac','deviceIpInformation'];
 
     requiredFields.forEach(field => {
         if (!(field in req.body)) {
@@ -53,7 +53,7 @@ router.post('/device', jsonParser, (req,res) => {
     });
 
     //First finds device based on 3 attributes, if none found then creates. Cannot find based on ID because you won't know it at the time of creating new device
-    Device.findOne({deviceName:req.body.deviceName,deviceSerialNumber:req.body.deviceSerialNumber,})
+    Device.findOne({deviceName:req.body.deviceName,deviceSerialNumber:req.body.deviceSerialNumber})
         .then(device => {
             console.log(device);
             if(device != null && Object.keys(device).length > 0) {
@@ -72,6 +72,7 @@ router.post('/device', jsonParser, (req,res) => {
                         res.status(200).json(device.serialize());
                     })
                     .catch(err => {
+                        console.log(err);
                         res.status(500).json({message: 'Could not create'})
                     })
             }
@@ -92,8 +93,9 @@ router.put('/device/:id', jsonParser, (req,res) => {
 
     return res.status(400).json({message: message});
   }
+  //If you added more fields to the device model, will have to update updateableFields
     const toUpdate = {};
-    const updateableFields = [];
+    const updateableFields = ['deviceName','deviceModel','deviceSerialNumber','deviceMac','deviceIpInformation'];
 
     updateableFields.forEach(field => {
         if (field in req.body) {
@@ -102,15 +104,17 @@ router.put('/device/:id', jsonParser, (req,res) => {
       });
 
     Device.findByIdAndUpdate(req.params.id, {$set: toUpdate})
-        .then(device => res.status(204).end())
-        .catch(err => res.status(500).json({message: 'Internal server error'}));
-
+        .then(res.status(204).json({message: `Updated successfully`}))
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({message: 'Internal server error'})
+        });
 });
 
 //device delete function. Only returns 1 specific device to delete & no plans to add mass delete, this will be used when Id is not known
 router.delete('/device', jsonParser, (req,res) => {
 
-    Device.findOne({})
+    Device.findOne({deviceName:req.body.deviceName,deviceSerialNumber:req.body.deviceSerialNumber})
         .then(device => {
             console.log(device);
              if(device != null && Object.keys(device).length > 0) {
@@ -122,7 +126,7 @@ router.delete('/device', jsonParser, (req,res) => {
                         })
             }
             else {
-                res.status(400).json({message: 'device does not exist'})
+                res.status(400).json({message: 'Device does not exist'})
             }})
         .catch(err => {
             console.log(err);
@@ -130,11 +134,26 @@ router.delete('/device', jsonParser, (req,res) => {
         })
 });
 
+//delete end point by using only ID
 router.delete('/device/:id', jsonParser, (req,res) => {
 
-    Device.findByIdAndRemove(req.params.id)
-        .then(() => res.status(204).end())
-        .catch(err => res.status(500).json({message: 'Internal server error'}));
+    Device.findOne({_id:req.params.id})
+        .then(device => {
+            if(device != null && Object.keys(device).length > 0) {
+                Device.deleteOne(device)
+                    .then(res.status(400).json({message: 'Success'}))
+                    .catch(err => {
+                        console.log(err);
+                        res.status(500).json({message: 'Error deleting user'})
+                    })
+            }
+            else {
+                res.status(400).json({message: 'Device does not exist'})
+            }})
+        .catch(err => {
+            console.log(err);
+            res.status(200).json({message: 'Could not find device'})
+        })
 });
 
 module.exports = { router };

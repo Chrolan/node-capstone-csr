@@ -146,11 +146,26 @@ router.delete('/customer', jsonParser, (req,res) => {
         })
 });
 
+//delete end point by using only ID
 router.delete('/customer/:id', jsonParser, (req,res) => {
 
-    Customer.findByIdAndRemove(req.params.id)
-        .then(() => res.status(204).end())
-        .catch(err => res.status(500).json({message: 'Internal server error'}));
+    Customer.findOne({_id:req.params.id})
+        .then(customer => {
+            if(customer != null && Object.keys(customer).length > 0) {
+                Customer.deleteOne(customer)
+                    .then(res.status(400).json({message: 'Success'}))
+                    .catch(err => {
+                        console.log(err);
+                        res.status(500).json({message: 'Error deleting customer'})
+                    })
+            }
+            else {
+                res.status(400).json({message: 'Customer does not exist'})
+            }})
+        .catch(err => {
+            console.log(err);
+            res.status(200).json({message: 'Could not find customer'})
+        })
 });
 
 module.exports = { router };
