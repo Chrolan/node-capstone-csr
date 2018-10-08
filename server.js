@@ -9,7 +9,8 @@ mongoose.Promise = global.Promise;
 
 const { router: usersRouter } = require('./users');
 const { router: authRouter, localStrategy, jwtStrategy } = require('./auth');
-const { router: customerRouter } = require('./customers');
+const { router: customerRouter } = require('./customers/router');
+const { router: deviceRouter } = require('./customers/deviceRouter');
 
 const { PORT, DATABASE_URL } = require('./config');
 
@@ -37,6 +38,7 @@ const jwtAuth = passport.authenticate('jwt', { session: false });
 app.use('/users/', usersRouter);
 app.use('/auth/', authRouter);
 app.use('/customers/', customerRouter);
+app.use('/customers/' , deviceRouter);
 
 app.get('/api/protected', jwtAuth, (req, res) => {
   return res.json({

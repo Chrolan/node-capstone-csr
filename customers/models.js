@@ -6,7 +6,7 @@ mongoose.Promise = global.Promise;
 
 const serviceSchema = mongoose.Schema ({
     serviceClient: {type: String, required: true},
-   serviceType: {type: String, required: true},
+    serviceType: {type: String, required: true},
     mediaType: {type: String, required: true},
     bandwidth: {type: String, required: true},
     circuitId: {type: String, required: true},
@@ -20,31 +20,28 @@ const serviceSchema = mongoose.Schema ({
     splitterPigtail: {type: String, required: true},
     fiberToOnt: {type: String, required: true},
     customer: {type: mongoose.Schema.ObjectId, ref: 'Customer'},
-    device: {type: mongoose.Schema.ObjectId, ref: 'Device'}
+    circuit: {type: mongoose.Schema.ObjectId, ref: 'Circuit'}
 });
 
+const deviceSchema = mongoose.Schema({
+    deviceName: {type: String, required: true},
+    deviceManufacturer: {type: String, required: true},
+    deviceModel: {type: String, required: true},
+    deviceSerialNumber: {type: String, required: true},
+    deviceIpInformation: {type: String, required: true},
+    deviceMac: {type: String, required: true},
+});
 
-const deviceSchema = mongoose.Schema ({
-   zLocation : {
-       deviceName: {type: String, required: true},
-       deviceManufacturer: {type: String, required: true},
-       deviceModel: {type: String, required: true},
-       devicePort: {type: String, required: true},
-       deviceSerialNumber: {type: String, required: true},
-       deviceIpInformation: {type: String, required: true},
-       deviceMac: {type: String, required: true},
-       deviceAdditionalInformation: {type: String}
+const circuitSchema = mongoose.Schema ({
+   zLocationDevice : {
+        device: {type: mongoose.Schema.Object, ref: 'Device'},
+        devicePort: {type: String, required: true},
    },
-    aLocation : {
-       deviceName: {type: String, required: true},
-       deviceManufacturer: {type: String, required: true},
-       deviceModel: {type: String, required: true},
-       devicePort: {type: String, required: true},
-       deviceSerialNumber: {type: String, required: true},
-       deviceIpInformation: {type: String, required: true},
-       deviceMac: {type: String, required: true},
-       deviceAdditionalInformation: {type: String}
+    aLocationDevice : {
+        device: {type: mongoose.Schema.Object, ref: 'Device'},
+        devicePort: {type: String, required: true},
    },
+    deviceAdditionalInformation: {type: String}
 });
 
 const customerSchema = mongoose.Schema ({
@@ -85,5 +82,6 @@ customerSchema.methods.serialize = function () {
 const Service = mongoose.model('Service', serviceSchema);
 const Device = mongoose.model('Device', deviceSchema);
 const Customer = mongoose.model('Customer', customerSchema);
+const Circuit = mongoose.model('Circuit', circuitSchema);
 
 module.exports = { Customer , Device, Service};
