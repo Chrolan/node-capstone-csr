@@ -44,7 +44,7 @@ const circuitSchema = mongoose.Schema({
             device:{type: mongoose.Schema.ObjectId, ref: 'Device'},
             devicePort: {type: String, required: true},
    }},
-    deviceAdditionalInformation: {type: String}
+    circuitAdditionalInformation: {type: String}
 });
 
 const customerSchema = mongoose.Schema ({

@@ -58,7 +58,20 @@ router.post('/circuit', jsonParser, (req,res) => {
         .then(device => {
             console.log(device);
             if(device != null && Object.keys(device).length > 0) {
-
+                Circuit.create({
+                    circuitId: req.body.circuitId,
+                    zLocationDevice : {
+                        deviceInfo:{
+                            device: device._id,
+                            devicePort: req.body.devicePort,
+                                   }},
+                    aLocationDevice : {
+                        deviceInfo:{
+                            device: device._id,
+                            devicePort: req.body.devicePort,
+                                   }},
+                    circuitAdditionalInformation: req.body.circuitAdditionalInformation
+                })
             }
             else {
                 Device.create({
