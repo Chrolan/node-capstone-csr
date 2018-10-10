@@ -11,6 +11,7 @@ const { router: usersRouter } = require('./users');
 const { router: authRouter, localStrategy, jwtStrategy } = require('./auth');
 const { router: customerRouter } = require('./customers/customerRouter');
 const { router: deviceRouter } = require('./customers/deviceRouter');
+const { router: circuitRouter } = require('./customers/circuitRouter');
 
 const { PORT, DATABASE_URL } = require('./config');
 
@@ -39,6 +40,7 @@ app.use('/users/', usersRouter);
 app.use('/auth/', authRouter);
 app.use('/customers/', customerRouter);
 app.use('/customers/' , deviceRouter);
+app.use('/customers/', circuitRouter);
 
 app.get('/api/protected', jwtAuth, (req, res) => {
   return res.json({

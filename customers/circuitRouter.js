@@ -43,7 +43,7 @@ router.get('/circuit/', jsonParser, (req,res) => {
 //circuit creation endpoint
 router.post('/circuit', jsonParser, (req,res) => {
 
-    const requiredFields = ['circuitType','circuitName','circuitAddress','circuitBillingAccount','circuitPhone'];
+    const requiredFields = [];
 
     requiredFields.forEach(field => {
         if (!(field in req.body)) {
@@ -53,12 +53,9 @@ router.post('/circuit', jsonParser, (req,res) => {
         }
     });
 
-    //First finds a device first based on 3 attributes, if none found then creates then can proceed to create
-    Device.findOne({deviceName:req.body.deviceName,deviceSerialNumber:req.body.deviceSerialNumber})
-        .then(device => {
-            console.log(device);
-            if(device != null && Object.keys(device).length > 0) {
-                Circuit.create({
+    /*
+    //look into reducing redundant entries
+    let deviceInfo = {
                     circuitId: req.body.circuitId,
                     zLocationDevice : {
                         deviceInfo:{
@@ -71,7 +68,43 @@ router.post('/circuit', jsonParser, (req,res) => {
                             devicePort: req.body.devicePort,
                                    }},
                     circuitAdditionalInformation: req.body.circuitAdditionalInformation
-                })
+                };
+                */
+
+    //First finds a device first based on 3 attributes, if none found then creates then can proceed to create
+    Device.findOne({deviceName:req.body.aLocationDevice.deviceInfo.device})
+        .then(device => {
+            console.log(device);
+            if(device != null && Object.keys(device).length > 0) {
+                Circuit.findOne({circuitID:req.body.circuitId})
+                    .then(circuit => {
+                        console.log(circuit);
+                        Circuit.create({
+                            circuitId: req.body.circuitId,
+                            zLocationDevice: {
+                                deviceInfo: {
+                                    device: device._id,
+                                    devicePort: req.body.zLocationDevice.deviceInfo.device,
+                                }
+                            },
+                            aLocationDevice: {
+                                deviceInfo: {
+                                    device: device._id,
+                                    devicePort: req.body.aLocationDevice.deviceInfo.device,
+                                }
+                            },
+                            circuitAdditionalInformation: req.body.circuitAdditionalInformation
+                        })
+                            .then(res.status(200).json({message: 'Circuit has been created'}))
+                            .catch(err => {
+                                console.log(err);
+                                res.status(500).json({message: 'Could not create'})
+                            })
+                    })
+                    .catch(err => {
+                                console.log(err);
+                                res.status(500).json({message: 'Could not create'})
+                            })
             }
             else {
                 Device.create({
@@ -83,14 +116,34 @@ router.post('/circuit', jsonParser, (req,res) => {
 					    deviceMac: req.body.deviceMac,
 				    })
                     .then(device => {
-
+                        console.log(device);
+                        Circuit.create({
+                            circuitId: req.body.circuitId,
+                            zLocationDevice : {
+                                deviceInfo:{
+                                    device: device._id,
+                                    devicePort: req.body.zLocationDevice.deviceInfo.devicePort
+                                           }},
+                            aLocationDevice : {
+                                deviceInfo:{
+                                    device: device._id,
+                                    devicePort: req.body.aLocationDevice.deviceInfo.devicePort
+                                           }},
+                            circuitAdditionalInformation: req.body.circuitAdditionalInformation
+                })
+                            .then(res.status(200).json({message: 'Circuit has been created'}))
+                            .catch(err => {
+                                console.log(err);
+                                res.status(500).json({message: 'Could not create'})
                     })
                     .catch(err => {
+                        console.log(err);
                         res.status(500).json({message: 'Could not create'})
                     })
-            }
-        })
+            })
+        }})
         .catch(err => {
+            console.log(err);
             res.status(500).json({message: 'Error looking up circuit'})
         });
 });

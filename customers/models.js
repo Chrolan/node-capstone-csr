@@ -94,4 +94,4 @@ const Device = mongoose.model('Device', deviceSchema);
 const Customer = mongoose.model('Customer', customerSchema);
 const Circuit = mongoose.model('Circuit', circuitSchema);
 
-module.exports = { Customer , Device, Service};
+module.exports = { Customer , Device, Service, Circuit};
