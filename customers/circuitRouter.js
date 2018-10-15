@@ -53,101 +53,57 @@ router.post('/circuit', jsonParser, (req,res) => {
         }
     });
 
-    /*
-    //look into reducing redundant entries
-    let deviceInfo = {
-                    circuitId: req.body.circuitId,
-                    zLocationDevice : {
-                        deviceInfo:{
-                            device: device._id,
-                            devicePort: req.body.devicePort,
-                                   }},
-                    aLocationDevice : {
-                        deviceInfo:{
-                            device: device._id,
-                            devicePort: req.body.devicePort,
-                                   }},
-                    circuitAdditionalInformation: req.body.circuitAdditionalInformation
-                };
-                */
-
-    //First finds a device first based on 3 attributes, if none found then creates then can proceed to create
+    //Nested look ups of 2 devices to make sure Z and A location devices existed before creating circuit
     Device.findOne({deviceName:req.body.aLocationDevice.deviceInfo.device})
-        .then(device => {
-            console.log(device);
-            if(device != null && Object.keys(device).length > 0) {
-                Circuit.findOne({circuitID:req.body.circuitId})
-                    .then(circuit => {
-                        console.log(circuit);
-                        Circuit.create({
-                            circuitId: req.body.circuitId,
-                            zLocationDevice: {
-                                deviceInfo: {
-                                    device: device._id,
-                                    devicePort: req.body.zLocationDevice.deviceInfo.device,
-                                }
-                            },
-                            aLocationDevice: {
-                                deviceInfo: {
-                                    device: device._id,
-                                    devicePort: req.body.aLocationDevice.deviceInfo.device,
-                                }
-                            },
-                            circuitAdditionalInformation: req.body.circuitAdditionalInformation
-                        })
-                            .then(res.status(200).json({message: 'Circuit has been created'}))
-                            .catch(err => {
-                                console.log(err);
-                                res.status(500).json({message: 'Could not create'})
-                            })
-                    })
-                    .catch(err => {
-                                console.log(err);
-                                res.status(500).json({message: 'Could not create'})
-                            })
-            }
+        .then(aDevice => {
+            console.log(aDevice);
+            if (aDevice != null && Object.keys(aDevice).length > 0) {
+                Device.findOne({deviceName:req.body.zLocationDevice.deviceInfo.device})
+                    .then(zDevice => {
+                        console.log(zDevice);
+                        if (zDevice != null && Object.keys(zDevice).length > 0) {
+                            Circuit.findOne({circuitID: req.body.circuitId})
+                                .then(circuit => {
+                                    console.log(circuit);
+                                    Circuit.create({
+                                        circuitId: req.body.circuitId,
+                                        zLocationDevice: {
+                                            deviceInfo: {
+                                                device: zDevice._id,
+                                                devicePort: req.body.zLocationDevice.deviceInfo.devicePort,
+                                            }
+                                        },
+                                        aLocationDevice: {
+                                            deviceInfo: {
+                                                device: aDevice._id,
+                                                devicePort: req.body.aLocationDevice.deviceInfo.devicePort,
+                                            }
+                                        },
+                                        circuitAdditionalInformation: req.body.circuitAdditionalInformation
+                                    })
+                                        .then(res.status(200).json({message: 'Circuit has been created'}))
+                                        .catch(err => {
+                                            console.log(err);
+                                            res.status(500).json({message: 'Could not create'})
+                                        })
+                                })
+                                .catch(err => {
+                                    console.log(err);
+                                    res.status(500).json({message: 'Could not create'})
+                                })
+                        }
+                        else {
+                            res.status(500).json({message:'zLocation Device does not exist'})
+                        }
+            })}
             else {
-                Device.create({
-                        deviceName: req.body.deviceName,
-                        deviceManufacturer: req.body.deviceManufacturer,
-					    deviceModel: req.body.deviceModel,
-					    deviceSerialNumber: req.body.deviceSerialNumber,
-					    deviceIpInformation: req.body.deviceIpInformation,
-					    deviceMac: req.body.deviceMac,
-				    })
-                    .then(device => {
-                        console.log(device);
-                        Circuit.create({
-                            circuitId: req.body.circuitId,
-                            zLocationDevice : {
-                                deviceInfo:{
-                                    device: device._id,
-                                    devicePort: req.body.zLocationDevice.deviceInfo.devicePort
-                                           }},
-                            aLocationDevice : {
-                                deviceInfo:{
-                                    device: device._id,
-                                    devicePort: req.body.aLocationDevice.deviceInfo.devicePort
-                                           }},
-                            circuitAdditionalInformation: req.body.circuitAdditionalInformation
-                })
-                            .then(res.status(200).json({message: 'Circuit has been created'}))
-                            .catch(err => {
-                                console.log(err);
-                                res.status(500).json({message: 'Could not create'})
-                    })
-                    .catch(err => {
-                        console.log(err);
-                        res.status(500).json({message: 'Could not create'})
-                    })
-            })
-        }})
+                res.status(500).json({message:'aLocation Device does not exist'})
+            }})
         .catch(err => {
             console.log(err);
             res.status(500).json({message: 'Error looking up circuit'})
         });
 });
-
 
 router.put('/circuit/:id', jsonParser, (req,res) => {
 
@@ -161,7 +117,7 @@ router.put('/circuit/:id', jsonParser, (req,res) => {
   }
     const toUpdate = {};
 
-    const updateableFields = ['circuitClient', 'circuitType', 'circuitName', 'circuitAddress ', 'circuitBillingAccount', 'circuitPhone', 'circuitSiteGps', 'circuitEntryGps', 'circuitAddressNote', 'circuitGateCode']
+    const updateableFields = ['circuitId','zLocationDevice','aLocationDevice','circuitAdditionalInformation'];
 
     updateableFields.forEach(field => {
         if (field in req.body) {
@@ -179,7 +135,7 @@ router.put('/circuit/:id', jsonParser, (req,res) => {
 //circuit delete function. Only returns 1 specific circuit to delete & no plans to add mass delete, this will be used when Id is not known
 router.delete('/circuit', jsonParser, (req,res) => {
 
-    Circuit.findOne({'circuitName.lastName':req.body.circuitName.lastName, circuitClient:req.body.circuitClient, circuitBillingAccount: req.body.circuitBillingAccount})
+    Circuit.findOne({circuitId:req.body.circuitId})
         .then(circuit => {
             console.log(circuit);
              if(circuit != null && Object.keys(circuit).length > 0) {
