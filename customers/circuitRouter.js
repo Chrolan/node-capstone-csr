@@ -43,7 +43,7 @@ router.get('/circuit/', jsonParser, (req,res) => {
 //circuit creation endpoint
 router.post('/circuit', jsonParser, (req,res) => {
 
-    const requiredFields = [];
+    const requiredFields = ['circuitId','zLocationDevice.deviceInfo.device','zLocationDevice.deviceInfo.device','aLocationDevice.deviceInfo.devicePort','aLocationDevice.deviceInfo.devicePort'];
 
     requiredFields.forEach(field => {
         if (!(field in req.body)) {
@@ -54,7 +54,7 @@ router.post('/circuit', jsonParser, (req,res) => {
     });
 
     //Nested look ups of 2 devices to make sure Z and A location devices existed before creating circuit
-    Device.findOne({deviceName:req.body.aLocationDevice.deviceInfo.device})
+    Device.findOne({customer:req.body.aLocationDevice.deviceInfo.device})
         .then(aDevice => {
             console.log(aDevice);
             if (aDevice != null && Object.keys(aDevice).length > 0) {
