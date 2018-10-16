@@ -125,11 +125,19 @@ router.put('/circuit/:id', jsonParser, (req,res) => {
         }
       });
 
-    circuit
-        .findByIdAndUpdate(req.params.id, {$set: toUpdate})
-        .then(circuit => res.status(204).end())
-        .catch(err => res.status(500).json({message: 'Internal server error'}));
-
+    Circuit.findOne({_id:req.params.id})
+        .then(circuit => {
+            Circuit.update(circuit, {$set: toUpdate})
+                .then(res.status(200).json({message:'Success'}))
+                .catch(err => {
+                    console.log(err);
+                    res.status(500).json({message:'Could not update circuit'})
+                })
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({message: 'Internal server error'})
+        });
 });
 
 //circuit delete function. Only returns 1 specific circuit to delete & no plans to add mass delete, this will be used when Id is not known
