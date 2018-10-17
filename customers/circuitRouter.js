@@ -28,10 +28,12 @@ router.get('/circuit/', jsonParser, (req,res) => {
 
    Circuit.find(filters)
        .limit(5)
+       .populate({ "path" : "zLocationDevice.deviceInfo.device" })
+       .populate({ "path" : "aLocationDevice.deviceInfo.device" })
        .sort({'circuitId': 1})
        .then(circuits => {
            res.json({circuits: circuits.map(circuit => {
-               return circuit.serialize()
+               return circuit
            })})
        })
        .catch(err => {
@@ -43,7 +45,7 @@ router.get('/circuit/', jsonParser, (req,res) => {
 //circuit creation endpoint
 router.post('/circuit', jsonParser, (req,res) => {
 
-    const requiredFields = ['circuitId','zLocationDevice.deviceInfo.device','zLocationDevice.deviceInfo.device','aLocationDevice.deviceInfo.devicePort','aLocationDevice.deviceInfo.devicePort'];
+    const requiredFields = ['zLocationDevice.deviceInfo.device','zLocationDevice.deviceInfo.device','aLocationDevice.deviceInfo.devicePort','aLocationDevice.deviceInfo.devicePort'];
 
     requiredFields.forEach(field => {
         if (!(field in req.body)) {
@@ -54,7 +56,7 @@ router.post('/circuit', jsonParser, (req,res) => {
     });
 
     //Nested look ups of 2 devices to make sure Z and A location devices existed before creating circuit
-    Device.findOne({customer:req.body.aLocationDevice.deviceInfo.device})
+    Device.findOne({deviceName:req.body.aLocationDevice.deviceInfo.device})
         .then(aDevice => {
             console.log(aDevice);
             if (aDevice != null && Object.keys(aDevice).length > 0) {
@@ -62,7 +64,7 @@ router.post('/circuit', jsonParser, (req,res) => {
                     .then(zDevice => {
                         console.log(zDevice);
                         if (zDevice != null && Object.keys(zDevice).length > 0) {
-                            Circuit.findOne({circuitID: req.body.circuitId})
+                            Circuit.findOne({circuitId: req.body.circuitId})
                                 .then(circuit => {
                                     console.log(circuit);
                                     Circuit.create({
@@ -107,36 +109,66 @@ router.post('/circuit', jsonParser, (req,res) => {
 
 router.put('/circuit/:id', jsonParser, (req,res) => {
 
-    if (!(req.params.id && req.body.id && req.params.id === req.body.id)) {
-    const message = (
-      `Request path id (${req.params.id}) and request body id ` +
-      `(${req.body.id}) must match`);
-    console.error(message);
+    const requiredFields = [];
 
-    return res.status(400).json({message: message});
-  }
-    const toUpdate = {};
-
-    const updateableFields = ['circuitId','zLocationDevice','aLocationDevice','circuitAdditionalInformation'];
-
-    updateableFields.forEach(field => {
-        if (field in req.body) {
-          toUpdate[field] = req.body[field];
+    requiredFields.forEach(field => {
+        if (!(field in req.body)) {
+            const message = `Missing \`${field}\` in request body`;
+            console.error(message);
+            return res.status(400).send(message);
         }
-      });
+    });
 
-    Circuit.findOne({_id:req.params.id})
-        .then(circuit => {
-            Circuit.update(circuit, {$set: toUpdate})
-                .then(res.status(200).json({message:'Success'}))
-                .catch(err => {
-                    console.log(err);
-                    res.status(500).json({message:'Could not update circuit'})
-                })
-        })
+    //Reused the post systematic approach of finding devices before trying to update.
+    //This is because the remote user won't have the ID to update the field, and we need to do a look up for that to replace
+    Device.findOne({deviceName:req.body.aLocationDevice.deviceInfo.device})
+        .then(aDevice => {
+            console.log(aDevice);
+            if (aDevice != null && Object.keys(aDevice).length > 0) {
+                Device.findOne({deviceName:req.body.zLocationDevice.deviceInfo.device})
+                    .then(zDevice => {
+                        console.log(zDevice);
+                        if (zDevice != null && Object.keys(zDevice).length > 0) {
+                            Circuit.findOne({circuitId: req.body.circuitId})
+                                .then(circuit => {
+                                    console.log(circuit);
+                                    Circuit.update({
+                                        circuitId: req.body.circuitId,
+                                        zLocationDevice: {
+                                            deviceInfo: {
+                                                device: zDevice._id,
+                                                devicePort: req.body.zLocationDevice.deviceInfo.devicePort,
+                                            }
+                                        },
+                                        aLocationDevice: {
+                                            deviceInfo: {
+                                                device: aDevice._id,
+                                                devicePort: req.body.aLocationDevice.deviceInfo.devicePort,
+                                            }
+                                        },
+                                        circuitAdditionalInformation: req.body.circuitAdditionalInformation
+                                    })
+                                        .then(res.status(200).json({message: 'Circuit has been updated'}))
+                                        .catch(err => {
+                                            console.log(err);
+                                            res.status(500).json({message: 'Could not update'})
+                                        })
+                                })
+                                .catch(err => {
+                                    console.log(err);
+                                    res.status(500).json({message: 'Could not update'})
+                                })
+                        }
+                        else {
+                            res.status(500).json({message:'zLocation Device does not exist'})
+                        }
+            })}
+            else {
+                res.status(500).json({message:'aLocation Device does not exist'})
+            }})
         .catch(err => {
             console.log(err);
-            res.status(500).json({message: 'Internal server error'})
+            res.status(500).json({message: 'Error looking up circuit'})
         });
 });
 

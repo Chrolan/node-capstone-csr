@@ -36,12 +36,12 @@ const circuitSchema = mongoose.Schema({
    circuitId: {type: String, required: true},
    zLocationDevice : {
         deviceInfo:{
-            device:{type: mongoose.Schema.ObjectId, ref: 'Device'},
+            device: {type: mongoose.Schema.ObjectId, ref: 'Device'},
             devicePort: {type: String, required: true},
    }},
     aLocationDevice : {
         deviceInfo:{
-            device:{type: mongoose.Schema.ObjectId, ref: 'Device'},
+            device: {type: mongoose.Schema.ObjectId, ref: 'Device'},
             devicePort: {type: String, required: true},
    }},
     circuitAdditionalInformation: {type: String}
