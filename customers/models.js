@@ -9,7 +9,6 @@ const serviceSchema = mongoose.Schema ({
     serviceType: {type: String, required: true},
     mediaType: {type: String, required: true},
     bandwidth: {type: String, required: true},
-    circuitId: {type: String, required: true},
     departmentId: {type: String, required: true},
     dataVlan : {type: String, required: true},
     voiceVlan: {type: String, required: true},
@@ -36,7 +35,7 @@ const circuitSchema = mongoose.Schema({
    circuitId: {type: String, required: true},
    zLocationDevice : {
         deviceInfo:{
-            device: {type: mongoose.Schema.ObjectId, ref: 'Device'},
+            device: {type: mongoose.Schema.ObjectId, ref: 'Device', required: true },
             devicePort: {type: String, required: true},
    }},
     aLocationDevice : {

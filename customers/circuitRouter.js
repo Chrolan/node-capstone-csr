@@ -45,7 +45,7 @@ router.get('/circuit/', jsonParser, (req,res) => {
 //circuit creation endpoint
 router.post('/circuit', jsonParser, (req,res) => {
 
-    const requiredFields = ['zLocationDevice.deviceInfo.device','zLocationDevice.deviceInfo.device','aLocationDevice.deviceInfo.devicePort','aLocationDevice.deviceInfo.devicePort'];
+    const requiredFields = ['circuitId','zLocationDevice','aLocationDevice'];
 
     requiredFields.forEach(field => {
         if (!(field in req.body)) {
@@ -109,7 +109,7 @@ router.post('/circuit', jsonParser, (req,res) => {
 
 router.put('/circuit/:id', jsonParser, (req,res) => {
 
-    const requiredFields = [];
+    const requiredFields = ['circuitId','zLocationDevice','aLocationDevice'];
 
     requiredFields.forEach(field => {
         if (!(field in req.body)) {

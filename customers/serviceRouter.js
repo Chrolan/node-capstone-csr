@@ -3,7 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const { Service } = require('./models');
-const { service } = require('./models');
+const { Circuit } = require('./models');
 const { Customer } = require('./models');
 
 const router = express.Router();
@@ -31,7 +31,7 @@ router.get('/service/', jsonParser, (req,res) => {
        .limit(5)
        .populate({ "path" : "customer" })
        .populate({ "path" : "circuit" })
-       .sort({'serviceId': 1})
+       .sort({'customer': 1})
        .then(services => {
            res.json({services: services.map(service => {
                return service
@@ -46,7 +46,7 @@ router.get('/service/', jsonParser, (req,res) => {
 //service creation endpoint
 router.post('/service', jsonParser, (req,res) => {
 
-    const requiredFields = ['zLocationDevice.deviceInfo.device','zLocationDevice.deviceInfo.device','aLocationDevice.deviceInfo.devicePort','aLocationDevice.deviceInfo.devicePort'];
+    const requiredFields = [];
 
     requiredFields.forEach(field => {
         if (!(field in req.body)) {
@@ -56,35 +56,21 @@ router.post('/service', jsonParser, (req,res) => {
         }
     });
 
-    //Nested look ups of 2 devices to make sure Z and A location devices existed before creating service
-    Device.findOne({deviceName:req.body.aLocationDevice.deviceInfo.device})
-        .then(aDevice => {
-            console.log(aDevice);
-            if (aDevice != null && Object.keys(aDevice).length > 0) {
-                Device.findOne({deviceName:req.body.zLocationDevice.deviceInfo.device})
-                    .then(zDevice => {
-                        console.log(zDevice);
-                        if (zDevice != null && Object.keys(zDevice).length > 0) {
-                            Service.findOne({serviceId: req.body.serviceId})
-                                .then(service => {
-                                    console.log(service);
-                                    Service.create({
-                                        serviceId: req.body.serviceId,
-                                        zLocationDevice: {
-                                            deviceInfo: {
-                                                device: zDevice._id,
-                                                devicePort: req.body.zLocationDevice.deviceInfo.devicePort,
-                                            }
-                                        },
-                                        aLocationDevice: {
-                                            deviceInfo: {
-                                                device: aDevice._id,
-                                                devicePort: req.body.aLocationDevice.deviceInfo.devicePort,
-                                            }
-                                        },
-                                        serviceAdditionalInformation: req.body.serviceAdditionalInformation
-                                    })
-                                        .then(res.status(200).json({message: 'service has been created'}))
+    Customer.findOne({'customerName.lastName':req.body.customerName.lastName, customerClient:req.body.customerClient, customerBillingAccount: req.body.customerBillingAccount})
+        .then(customer => {
+            console.log(customer);
+            if (customer != null && Object.keys(customer).length > 0) {
+                Circuit.findOne({circuitId:req.body.circuitId})
+                    .then(circuit => {
+                        console.log(circuit);
+                        if (circuit != null && Object.keys(circuit).length > 0) {
+                            Circuit.findOne({circuitId: req.body.circuitId})
+                                .then(circuit => {
+                                    console.log(circuit);
+                                    Service.create(
+
+                                    )
+                                        .then(res.status(200).json({message: 'Service has been created'}))
                                         .catch(err => {
                                             console.log(err);
                                             res.status(500).json({message: 'Could not create'})
@@ -96,16 +82,19 @@ router.post('/service', jsonParser, (req,res) => {
                                 })
                         }
                         else {
-                            res.status(500).json({message:'zLocation Device does not exist'})
+                            res.status(500).json({message:'Circuit Device does not exist'})
                         }
             })}
             else {
-                res.status(500).json({message:'aLocation Device does not exist'})
+                res.status(500).json({message:'Customer does not exist'})
             }})
         .catch(err => {
             console.log(err);
-            res.status(500).json({message: 'Error looking up service'})
+            res.status(500).json({message: 'Error looking up Service'})
         });
+
+
+
 });
 
 router.put('/service/:id', jsonParser, (req,res) => {
@@ -120,57 +109,7 @@ router.put('/service/:id', jsonParser, (req,res) => {
         }
     });
 
-    //Reused the post systematic approach of finding devices before trying to update.
-    //This is because the remote user won't have the ID to update the field, and we need to do a look up for that to replace
-    Device.findOne({deviceName:req.body.aLocationDevice.deviceInfo.device})
-        .then(aDevice => {
-            console.log(aDevice);
-            if (aDevice != null && Object.keys(aDevice).length > 0) {
-                Device.findOne({deviceName:req.body.zLocationDevice.deviceInfo.device})
-                    .then(zDevice => {
-                        console.log(zDevice);
-                        if (zDevice != null && Object.keys(zDevice).length > 0) {
-                            Service.findOne({serviceId: req.body.serviceId})
-                                .then(service => {
-                                    console.log(service);
-                                    Service.update({
-                                        serviceId: req.body.serviceId,
-                                        zLocationDevice: {
-                                            deviceInfo: {
-                                                device: zDevice._id,
-                                                devicePort: req.body.zLocationDevice.deviceInfo.devicePort,
-                                            }
-                                        },
-                                        aLocationDevice: {
-                                            deviceInfo: {
-                                                device: aDevice._id,
-                                                devicePort: req.body.aLocationDevice.deviceInfo.devicePort,
-                                            }
-                                        },
-                                        serviceAdditionalInformation: req.body.serviceAdditionalInformation
-                                    })
-                                        .then(res.status(200).json({message: 'service has been updated'}))
-                                        .catch(err => {
-                                            console.log(err);
-                                            res.status(500).json({message: 'Could not update'})
-                                        })
-                                })
-                                .catch(err => {
-                                    console.log(err);
-                                    res.status(500).json({message: 'Could not update'})
-                                })
-                        }
-                        else {
-                            res.status(500).json({message:'zLocation Device does not exist'})
-                        }
-            })}
-            else {
-                res.status(500).json({message:'aLocation Device does not exist'})
-            }})
-        .catch(err => {
-            console.log(err);
-            res.status(500).json({message: 'Error looking up service'})
-        });
+
 });
 
 //service delete function. Only returns 1 specific service to delete & no plans to add mass delete, this will be used when Id is not known
