@@ -30,7 +30,8 @@ router.get('/service/', jsonParser, (req,res) => {
    Service.find(filters)
        .limit(5)
        .populate({ "path" : "customer" })
-       .populate({ "path" : "circuit" })
+       .populate({"path" : "circuit" ,
+           "populate" : {"path": "deviceInfo.device"}})
        .sort({'customer': 1})
        .then(services => {
            res.json({services: services.map(service => {
@@ -67,9 +68,24 @@ router.post('/service', jsonParser, (req,res) => {
                             Circuit.findOne({circuitId: req.body.circuitId})
                                 .then(circuit => {
                                     console.log(circuit);
-                                    Service.create(
-
-                                    )
+                                    Service.create({
+                                        serviceClient: req.body.serviceClient,
+                                        serviceType: req.body.serviceType,
+                                        mediaType: req.body.mediaType,
+                                        bandwidth: req.body.bandwidth,
+                                        circuitId: req.body.circuitId,
+                                        departmentId: req.body.departmentId,
+                                        dataVlan: req.body.dataVlan,
+                                        voiceVlan: req.body.voiceVlan,
+                                        dataCenter: req.body.dataCenter,
+                                        distributionArea: req.body.distributionArea,
+                                        daDeviceName: req.body.daDeviceName,
+                                        fiberToDataCenter: req.body.fiberToDataCenter,
+                                        splitterPigtail: req.body.splitterPigtail,
+                                        fiberToOnt: req.body.fiberToOnt,
+                                        customer: customer._id,
+                                        circuit: circuit._id
+                                    })
                                         .then(res.status(200).json({message: 'Service has been created'}))
                                         .catch(err => {
                                             console.log(err);
