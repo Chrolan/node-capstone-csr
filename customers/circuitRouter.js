@@ -14,7 +14,7 @@ const jsonParser = bodyParser.json();
 
 
 //General circuit query, will allow passed parameters.
-router.get('/circuit/', jsonParser, (req,res) => {
+router.get('/', jsonParser, (req,res) => {
 
     const filters = {};
     const queryFields = ['circuitId','zLocationDevice.deviceInfo.device','zLocationDevice.deviceInfo.device','aLocationDevice.deviceInfo.devicePort','aLocationDevice.deviceInfo.devicePort'];
@@ -43,7 +43,7 @@ router.get('/circuit/', jsonParser, (req,res) => {
     });
 
 //circuit creation endpoint
-router.post('/circuit', jsonParser, (req,res) => {
+router.post('/', jsonParser, (req,res) => {
 
     const requiredFields = ['circuitId','zLocationDevice','aLocationDevice'];
 
@@ -107,7 +107,7 @@ router.post('/circuit', jsonParser, (req,res) => {
         });
 });
 
-router.put('/circuit/:id', jsonParser, (req,res) => {
+router.put('/:id', jsonParser, (req,res) => {
 
     const requiredFields = ['circuitId','zLocationDevice','aLocationDevice'];
 
@@ -123,15 +123,12 @@ router.put('/circuit/:id', jsonParser, (req,res) => {
     //This is because the remote user won't have the ID to update the field, and we need to do a look up for that to replace
     Device.findOne({deviceName:req.body.aLocationDevice.deviceInfo.device})
         .then(aDevice => {
-            console.log(aDevice);
             if (aDevice != null && Object.keys(aDevice).length > 0) {
                 Device.findOne({deviceName:req.body.zLocationDevice.deviceInfo.device})
                     .then(zDevice => {
-                        console.log(zDevice);
                         if (zDevice != null && Object.keys(zDevice).length > 0) {
-                            Circuit.findOne({circuitId: req.body.circuitId})
+                            Circuit.findOne({_id:req.params.id})
                                 .then(circuit => {
-                                    console.log(circuit);
                                     Circuit.update({
                                         circuitId: req.body.circuitId,
                                         zLocationDevice: {
@@ -173,7 +170,7 @@ router.put('/circuit/:id', jsonParser, (req,res) => {
 });
 
 //circuit delete function. Only returns 1 specific circuit to delete & no plans to add mass delete, this will be used when Id is not known
-router.delete('/circuit', jsonParser, (req,res) => {
+router.delete('/', jsonParser, (req,res) => {
 
     Circuit.findOne({circuitId:req.body.circuitId})
         .then(circuit => {
@@ -196,7 +193,7 @@ router.delete('/circuit', jsonParser, (req,res) => {
 });
 
 //delete end point by using only ID
-router.delete('/circuit/:id', jsonParser, (req,res) => {
+router.delete('/:id', jsonParser, (req,res) => {
 
     Circuit.findOne({_id:req.params.id})
         .then(circuit => {

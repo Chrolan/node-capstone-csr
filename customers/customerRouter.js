@@ -13,7 +13,7 @@ const jsonParser = bodyParser.json();
 
 
 //General customer query, will allow passed parameters.
-router.get('/customer/', jsonParser, (req,res) => {
+router.get('/', jsonParser, (req,res) => {
 
     const filters = {};
     const queryFields = ['customerType','customerName.lastName','customerAddress','customerBillingAccount','customerPhone','customerClient'];
@@ -40,7 +40,7 @@ router.get('/customer/', jsonParser, (req,res) => {
 });
 
 //customer creation endpoint
-router.post('/customer', jsonParser, (req,res) => {
+router.post('/', jsonParser, (req,res) => {
 
     const requiredFields = ['customerType','customerName','customerAddress','customerBillingAccount','customerPhone'];
 
@@ -96,7 +96,7 @@ router.post('/customer', jsonParser, (req,res) => {
 });
 
 
-router.put('/customer/:id', jsonParser, (req,res) => {
+router.put('/:id', jsonParser, (req,res) => {
 
     if (!(req.params.id && req.body.id && req.params.id === req.body.id)) {
     const message = (
@@ -124,7 +124,7 @@ router.put('/customer/:id', jsonParser, (req,res) => {
 });
 
 //customer delete function. Only returns 1 specific customer to delete & no plans to add mass delete, this will be used when Id is not known
-router.delete('/customer', jsonParser, (req,res) => {
+router.delete('/', jsonParser, (req,res) => {
 
     Customer.findOne({'customerName.lastName':req.body.customerName.lastName, customerClient:req.body.customerClient, customerBillingAccount: req.body.customerBillingAccount})
         .then(customer => {

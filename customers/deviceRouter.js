@@ -13,7 +13,7 @@ const jsonParser = bodyParser.json();
 
 
 //General device query, will allow passed parameters.
-router.get('/device/', jsonParser, (req,res) => {
+router.get('/', jsonParser, (req,res) => {
 
     const filters = {};
     const queryFields = ['deviceName','deviceManufacturer','deviceModel','deviceSerialNumber','deviceMac'];
@@ -40,7 +40,7 @@ router.get('/device/', jsonParser, (req,res) => {
 });
 
 //device creation endpoint
-router.post('/device', jsonParser, (req,res) => {
+router.post('/', jsonParser, (req,res) => {
 
     const requiredFields = ['deviceName','deviceModel','deviceSerialNumber','deviceMac','deviceIpInformation'];
 
@@ -82,7 +82,7 @@ router.post('/device', jsonParser, (req,res) => {
         });
 });
 
-
+//will be able to update device by obj id
 router.put('/device/:id', jsonParser, (req,res) => {
 
     if (!(req.params.id && req.body.id && req.params.id === req.body.id)) {
@@ -112,7 +112,7 @@ router.put('/device/:id', jsonParser, (req,res) => {
 });
 
 //device delete function. Only returns 1 specific device to delete & no plans to add mass delete, this will be used when Id is not known
-router.delete('/device', jsonParser, (req,res) => {
+router.delete('/', jsonParser, (req,res) => {
 
     Device.findOne({deviceName:req.body.deviceName,deviceSerialNumber:req.body.deviceSerialNumber})
         .then(device => {
@@ -135,7 +135,7 @@ router.delete('/device', jsonParser, (req,res) => {
 });
 
 //delete end point by using only ID
-router.delete('/device/:id', jsonParser, (req,res) => {
+router.delete('/:id', jsonParser, (req,res) => {
 
     Device.findOne({_id:req.params.id})
         .then(device => {

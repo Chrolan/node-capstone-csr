@@ -3,7 +3,14 @@
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
+//service request model, this will reference all other models in some way
+//due to it being used as the record holder for addition of items into telco database by end user
+const serviceRequestSchema = mongoose.Schema ({
 
+});
+
+//service schema will hold information of each service provided by Telco
+//service rides a circuit for a customer
 const serviceSchema = mongoose.Schema ({
     serviceClient: {type: String, required: true},
     serviceType: {type: String, required: true},
@@ -22,6 +29,7 @@ const serviceSchema = mongoose.Schema ({
     circuit: {type: mongoose.Schema.ObjectId, ref: 'Circuit'}
 });
 
+//end devices available on network for inventory
 const deviceSchema = mongoose.Schema({
     deviceName: {type: String, required: true},
     deviceManufacturer: {type: String, required: true},
@@ -31,6 +39,7 @@ const deviceSchema = mongoose.Schema({
     deviceMac: {type: String, required: true},
 });
 
+//circuit has 2 ends, a device at each
 const circuitSchema = mongoose.Schema({
    circuitId: {type: String, required: true},
    zLocationDevice : {
@@ -46,6 +55,7 @@ const circuitSchema = mongoose.Schema({
     circuitAdditionalInformation: {type: String}
 });
 
+//telco customer for inventorying
 const customerSchema = mongoose.Schema ({
     customerClient: {type: String, required: true},
     customerType: {type: String, required: true},

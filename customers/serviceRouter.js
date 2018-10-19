@@ -15,7 +15,7 @@ const jsonParser = bodyParser.json();
 
 
 //General service query, will allow passed parameters.
-router.get('/service/', jsonParser, (req,res) => {
+router.get('/', jsonParser, (req,res) => {
 
     const filters = {};
     const queryFields = [];
@@ -30,8 +30,8 @@ router.get('/service/', jsonParser, (req,res) => {
    Service.find(filters)
        .limit(5)
        .populate({ "path" : "customer" })
-       .populate({"path" : "circuit" ,
-           "populate" : {"path": "deviceInfo.device"}})
+       .populate({"path" : "circuit" })
+       .populate({"path": "device"})
        .sort({'customer': 1})
        .then(services => {
            res.json({services: services.map(service => {
@@ -45,7 +45,7 @@ router.get('/service/', jsonParser, (req,res) => {
     });
 
 //service creation endpoint
-router.post('/service', jsonParser, (req,res) => {
+router.post('/', jsonParser, (req,res) => {
 
     const requiredFields = [];
 
@@ -59,15 +59,12 @@ router.post('/service', jsonParser, (req,res) => {
 
     Customer.findOne({'customerName.lastName':req.body.customerName.lastName, customerClient:req.body.customerClient, customerBillingAccount: req.body.customerBillingAccount})
         .then(customer => {
-            console.log(customer);
             if (customer != null && Object.keys(customer).length > 0) {
                 Circuit.findOne({circuitId:req.body.circuitId})
                     .then(circuit => {
-                        console.log(circuit);
                         if (circuit != null && Object.keys(circuit).length > 0) {
                             Circuit.findOne({circuitId: req.body.circuitId})
                                 .then(circuit => {
-                                    console.log(circuit);
                                     Service.create({
                                         serviceClient: req.body.serviceClient,
                                         serviceType: req.body.serviceType,
@@ -113,7 +110,7 @@ router.post('/service', jsonParser, (req,res) => {
 
 });
 
-router.put('/service/:id', jsonParser, (req,res) => {
+router.put('/:id', jsonParser, (req,res) => {
 
     const requiredFields = [];
 
@@ -125,11 +122,64 @@ router.put('/service/:id', jsonParser, (req,res) => {
         }
     });
 
-
+    Customer.findOne({'customerName.lastName':req.body.customerName.lastName, customerClient:req.body.customerClient, customerBillingAccount: req.body.customerBillingAccount})
+        .then(customer => {
+            if (customer != null && Object.keys(customer).length > 0) {
+                Circuit.findOne({circuitId:req.body.circuitId})
+                    .then(circuit => {
+                        if (circuit != null && Object.keys(circuit).length > 0) {
+                            Circuit.findOne({circuitId: req.body.circuitId})
+                                .then(circuit => {
+                                    Service.findOne({_id:req.params.id})
+                                        .then(service => {
+                                            Service.update({
+                                                serviceClient: req.body.serviceClient,
+                                                serviceType: req.body.serviceType,
+                                                mediaType: req.body.mediaType,
+                                                bandwidth: req.body.bandwidth,
+                                                circuitId: req.body.circuitId,
+                                                departmentId: req.body.departmentId,
+                                                dataVlan: req.body.dataVlan,
+                                                voiceVlan: req.body.voiceVlan,
+                                                dataCenter: req.body.dataCenter,
+                                                distributionArea: req.body.distributionArea,
+                                                daDeviceName: req.body.daDeviceName,
+                                                fiberToDataCenter: req.body.fiberToDataCenter,
+                                                splitterPigtail: req.body.splitterPigtail,
+                                                fiberToOnt: req.body.fiberToOnt,
+                                                customer: customer._id,
+                                                circuit: circuit._id
+                                            })
+                                                .then(res.status(200).json({message: 'Service has been updated'}))
+                                                .catch(err => {
+                                                    console.log(err);
+                                                    res.status(500).json({message: 'Could not create'})
+                                                })
+                                        })
+                                        .catch(err => {
+                                            console.log(err);
+                                        res.status(500).json({message:'Could not find service'})})
+                                })
+                                .catch(err => {
+                                    console.log(err);
+                                    res.status(500).json({message: 'Could not update service'})
+                                })
+                        }
+                        else {
+                            res.status(500).json({message:'Circuit Device does not exist'})
+                        }
+            })}
+            else {
+                res.status(500).json({message:'Customer does not exist'})
+            }})
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({message: 'Error looking up Service'})
+        });
 });
 
 //service delete function. Only returns 1 specific service to delete & no plans to add mass delete, this will be used when Id is not known
-router.delete('/service', jsonParser, (req,res) => {
+router.delete('/', jsonParser, (req,res) => {
 
     Service.findOne({serviceId:req.body.serviceId})
         .then(service => {
@@ -152,7 +202,7 @@ router.delete('/service', jsonParser, (req,res) => {
 });
 
 //delete end point by using only ID
-router.delete('/service/:id', jsonParser, (req,res) => {
+router.delete('/:id', jsonParser, (req,res) => {
 
     Service.findOne({_id:req.params.id})
         .then(service => {

@@ -13,6 +13,7 @@ const { router: customerRouter } = require('./customers/customerRouter');
 const { router: deviceRouter } = require('./customers/deviceRouter');
 const { router: circuitRouter } = require('./customers/circuitRouter');
 const { router: serviceRouter } = require('./customers/serviceRouter');
+const { router: serviceRequestRouter } = require('./customers/serviceRequestRouter');
 
 const { PORT, DATABASE_URL } = require('./config');
 
@@ -40,9 +41,10 @@ const jwtAuth = passport.authenticate('jwt', { session: false });
 app.use('/users/', usersRouter);
 app.use('/auth/', authRouter);
 app.use('/customers/', customerRouter);
-app.use('/customers/' , deviceRouter);
-app.use('/customers/', circuitRouter);
-app.use('/customers/', serviceRouter);
+app.use('/devices/' , deviceRouter);
+app.use('/circuits/', circuitRouter);
+app.use('/services/', serviceRouter);
+app.use('/requests', serviceRequestRouter );
 
 app.get('/api/protected', jwtAuth, (req, res) => {
   return res.json({
