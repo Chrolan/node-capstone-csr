@@ -44,7 +44,7 @@ app.use('/customers/', customerRouter);
 app.use('/devices/' , deviceRouter);
 app.use('/circuits/', circuitRouter);
 app.use('/services/', serviceRouter);
-app.use('/requests', serviceRequestRouter );
+//app.use('/requests', serviceRequestRouter );
 
 app.get('/api/protected', jwtAuth, (req, res) => {
   return res.json({

@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const { Service } = require('./models');
 const { Circuit } = require('./models');
 const { Customer } = require('./models');
+const { Device } = require('./models');
 
 const router = express.Router();
 
@@ -30,8 +31,8 @@ router.get('/', jsonParser, (req,res) => {
    Service.find(filters)
        .limit(5)
        .populate({ "path" : "customer" })
-       .populate({"path" : "circuit" })
-       .populate({"path": "device"})
+       .populate({ "path" : "circuit", "model": "Circuit", populate: [{
+           path: "zLocationDevice.deviceInfo.device", model: "Device"},{path: "aLocationDevice.deviceInfo.device",model:"Device"}]})
        .sort({'customer': 1})
        .then(services => {
            res.json({services: services.map(service => {
