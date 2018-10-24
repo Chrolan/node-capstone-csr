@@ -21,7 +21,6 @@ const app = express();
 
 app.use(morgan('common'));
 
-
 app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization');
@@ -40,18 +39,11 @@ const jwtAuth = passport.authenticate('jwt', { session: false });
 
 app.use('/users/', usersRouter);
 app.use('/auth/', authRouter);
-app.use('/customers/', customerRouter);
-app.use('/devices/' , deviceRouter);
-app.use('/circuits/', circuitRouter);
-app.use('/services/', serviceRouter);
-//app.use('/requests', serviceRequestRouter );
-
-app.get('/api/protected', jwtAuth, (req, res) => {
-  return res.json({
-    data: 'rosebud'
-  });
-});
-
+app.use('/customers/', jwtAuth, customerRouter);
+app.use('/devices/' , jwtAuth, deviceRouter);
+app.use('/circuits/', jwtAuth,circuitRouter);
+app.use('/services/', jwtAuth, serviceRouter);
+//app.use('/requests', jwtAuth, serviceRequestRouter );
 
 app.use('*', (req, res) => {
   return res.status(404).json({ message: 'Not Found' });

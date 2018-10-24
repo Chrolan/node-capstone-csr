@@ -64,39 +64,32 @@ router.post('/', jsonParser, (req,res) => {
                 Circuit.findOne({circuitId:req.body.circuitId})
                     .then(circuit => {
                         if (circuit != null && Object.keys(circuit).length > 0) {
-                            Circuit.findOne({circuitId: req.body.circuitId})
-                                .then(circuit => {
-                                    Service.create({
-                                        serviceClient: req.body.serviceClient,
-                                        serviceType: req.body.serviceType,
-                                        mediaType: req.body.mediaType,
-                                        bandwidth: req.body.bandwidth,
-                                        circuitId: req.body.circuitId,
-                                        departmentId: req.body.departmentId,
-                                        dataVlan: req.body.dataVlan,
-                                        voiceVlan: req.body.voiceVlan,
-                                        dataCenter: req.body.dataCenter,
-                                        distributionArea: req.body.distributionArea,
-                                        daDeviceName: req.body.daDeviceName,
-                                        fiberToDataCenter: req.body.fiberToDataCenter,
-                                        splitterPigtail: req.body.splitterPigtail,
-                                        fiberToOnt: req.body.fiberToOnt,
-                                        customer: customer._id,
-                                        circuit: circuit._id
-                                    })
-                                        .then(res.status(200).json({message: 'Service has been created'}))
-                                        .catch(err => {
-                                            console.log(err);
-                                            res.status(500).json({message: 'Could not create'})
-                                        })
-                                })
+                            Service.create({
+                                serviceClient: req.body.serviceClient,
+                                serviceType: req.body.serviceType,
+                                mediaType: req.body.mediaType,
+                                bandwidth: req.body.bandwidth,
+                                circuitId: req.body.circuitId,
+                                departmentId: req.body.departmentId,
+                                dataVlan: req.body.dataVlan,
+                                voiceVlan: req.body.voiceVlan,
+                                dataCenter: req.body.dataCenter,
+                                distributionArea: req.body.distributionArea,
+                                daDeviceName: req.body.daDeviceName,
+                                fiberToDataCenter: req.body.fiberToDataCenter,
+                                splitterPigtail: req.body.splitterPigtail,
+                                fiberToOnt: req.body.fiberToOnt,
+                                customer: customer._id,
+                                circuit: circuit._id
+                            })
+                                .then(res.status(200).json({message: 'Service has been created'}))
                                 .catch(err => {
                                     console.log(err);
                                     res.status(500).json({message: 'Could not create'})
                                 })
                         }
                         else {
-                            res.status(500).json({message:'Circuit Device does not exist'})
+                            res.status(500).json({message:'Circuit does not exist'})
                         }
             })}
             else {
@@ -106,9 +99,6 @@ router.post('/', jsonParser, (req,res) => {
             console.log(err);
             res.status(500).json({message: 'Error looking up Service'})
         });
-
-
-
 });
 
 router.put('/:id', jsonParser, (req,res) => {

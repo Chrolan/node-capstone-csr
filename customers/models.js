@@ -6,7 +6,23 @@ mongoose.Promise = global.Promise;
 //service request model, this will reference all other models in some way
 //due to it being used as the record holder for addition of items into telco database by end user
 const serviceRequestSchema = mongoose.Schema ({
-
+    customerReferenceNumber: { type: String, required: true},
+    customerCompanyName: { type: String, required: true},
+    authorizedSubmitter: {type: mongoose.Schema.ObjectId, ref:'User'},
+    serviceRequestNumber: {type:Number, required: true},
+    formSubmitDate: {type: Date, required: true},
+    requestedProvDate:{type: Date, required: true},
+    targetInstallDate: {type: Date, required: true},
+    serviceRequestType: { type: String, required: true},
+    serviceRequestPriority: { type: String, required: true},
+    serviceRequestDetails: { type: String, required: true},
+    serviceAffecting: {
+        yesOrNo :{ type: Boolean, required:true},
+        details: {type: String}},
+    serviceProtected: {
+        yesOrNo :{ type: Boolean, required:true},
+        details: {type: String}},
+    service: {type: mongoose.Schema.ObjectId, ref: 'Service'}
 });
 
 //service schema will hold information of each service provided by Telco
@@ -102,5 +118,6 @@ const Service = mongoose.model('Service', serviceSchema);
 const Device = mongoose.model('Device', deviceSchema);
 const Customer = mongoose.model('Customer', customerSchema);
 const Circuit = mongoose.model('Circuit', circuitSchema);
+const Request = mongoose.model('Request', serviceRequestSchema);
 
-module.exports = { Customer , Device, Service, Circuit};
+module.exports = { Customer , Device, Service, Circuit, Request};

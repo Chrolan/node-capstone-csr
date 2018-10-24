@@ -10,8 +10,7 @@ const router = express.Router();
 const jsonParser = bodyParser.json();
 
 const createAuthToken = function(user) {
-  console.log(user);
-  return jwt.sign({user}, config.JWT_SECRET, {
+    return jwt.sign({user}, config.JWT_SECRET, {
     subject: user.name,
     expiresIn: config.JWT_EXPIRY,
     algorithm: 'HS256'
