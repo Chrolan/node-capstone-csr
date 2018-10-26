@@ -22,9 +22,9 @@ router.get('/', jsonParser, (req,res) => {
 
 router.post('/', jsonParser, (req,res) => {
 
-    const essentialFields =  ['username', 'password', 'firstName', 'lastName','email','client'];
+    const requiredFields =  ['username', 'password', 'firstName', 'lastName','email','companyName','typeOfUser'];
 
-    const missedFields = essentialFields.find(field => !(field in req.body));
+    const missedFields = requiredFields.find(field => !(field in req.body));
 
     if (missedFields) {
         return res.status(422).json({
@@ -35,7 +35,7 @@ router.post('/', jsonParser, (req,res) => {
         });
     }
 
-    const stringValidation = essentialFields.find(field => field in req.body && typeof req.body[field] !== 'string');
+    const stringValidation = requiredFields.find(field => field in req.body && typeof req.body[field] !== 'string');
 
     if (stringValidation) {
         return res.status(422).json ({
@@ -46,7 +46,7 @@ router.post('/', jsonParser, (req,res) => {
         });
     }
 
-    const nonTrimmedField = essentialFields.find(field => req.body[field].trim() !== req.body[field]);
+    const nonTrimmedField = requiredFields.find(field => req.body[field].trim() !== req.body[field]);
 
     if (nonTrimmedField) {
         return res.status(422).json({
@@ -92,7 +92,7 @@ router.post('/', jsonParser, (req,res) => {
     });
   }
 
-  let { username, password, firstName, lastName, email, client} = req.body;
+  let { username, password, firstName, lastName, email, phone, companyName, typeOfUser} = req.body;
 
   return User.find({username})
     .then(count => {
@@ -115,13 +115,16 @@ router.post('/', jsonParser, (req,res) => {
         firstName,
         lastName,
         email,
-        client
+        phone,
+        companyName,
+        typeOfUser
       });
     })
     .then(user => {
       return res.status(201).json(user.serialize());
     })
     .catch(err => {
+        console.log(err);
       // Forward validation errors on to the client, otherwise give a 500
       // error because something unexpected has happened
       if (err.reason === 'ValidationError') {
