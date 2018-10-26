@@ -43,7 +43,7 @@ app.use('/customers/', customerRouter);
 app.use('/devices/' ,  deviceRouter);
 app.use('/circuits/', circuitRouter);
 app.use('/services/',  serviceRouter);
-app.use('/requests',  serviceRequestRouter );
+app.use('/requests', jwtAuth, serviceRequestRouter );
 
 app.use('*', (req, res) => {
   return res.status(404).json({ message: 'Not Found' });

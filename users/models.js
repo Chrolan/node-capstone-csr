@@ -21,7 +21,8 @@ UserSchema.methods.validatePassword = function(password) {
 
 UserSchema.methods.serialize = function () {
     return {
-        name: `${this.firstName} ${this.lastName}`
+        name: `${this.firstName} ${this.lastName}`,
+        id: this._id
     }
 };
 

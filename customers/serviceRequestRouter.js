@@ -59,6 +59,7 @@ router.post('/', jsonParser, (req,res) => {
 
     Service.findOne({dataVlan:req.body.dataVlan,daDeviceName:req.body.daDeviceName})
         .then(service => {
+            console.log(req);
             if (service != null && Object.keys(service).length > 0) {
                 Request.findOne({serviceRequestNumber:req.body.serviceRequestNumber})
                     .then(request => {
@@ -88,16 +89,16 @@ router.post('/', jsonParser, (req,res) => {
                                 .then(res.status(200).json({message: 'Request has been created'}))
                                 .catch(err => {
                                     console.log(err);
-                                    res.status(500).json({message: 'Could not create'})
+                                    res.status(500).json({message: 'Could not create Request'})
                                 })
                         }
                     })
                     .catch(err => {
                         console.log(err);
-                        res.status(500).json({message:'Service Could not be created'})
+                        res.status(500).json({message:'Service Request could not be created'})
                     })}
             else {
-                res.status(500).json({message:'Customer does not exist'})
+                res.status(500).json({message:'Service does not exist'})
             }})
         .catch(err => {
             console.log(err);
