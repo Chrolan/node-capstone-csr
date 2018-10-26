@@ -57,18 +57,21 @@ router.post('/', jsonParser, (req,res) => {
         }
     });
 
-    Service.findOne({})
+    Service.findOne({dataVlan:req.body.dataVlan,daDeviceName:req.body.daDeviceName})
         .then(service => {
             if (service != null && Object.keys(service).length > 0) {
-                Request.findOne({circuitId:req.body.circuitId})
+                Request.findOne({serviceRequestNumber:req.body.serviceRequestNumber})
                     .then(request => {
-                        if (request === null && Object.keys(request).length === 0) {
+                        if (request) {
+                            res.status(500).json({message: 'Circuit Device does not exist'})
+                        }
+                        else {
                             Request.create({
                                 customerReferenceNumber: req.body.customerReferenceNumber,
                                 customerCompanyName: req.body.customerCompanyName,
                                 authorizedSubmitter: req.user.name,
                                 serviceRequestNumber: req.body.serviceRequestNumber,
-                                formSubmitDate: req.body.formSubmitDate,
+                                formSubmitDate: Date.now(),
                                 requestedProvDate:req.body.requestedProvDate,
                                 targetInstallDate: req.body.targetInstallDate,
                                 serviceRequestType: req.body.serviceRequestType,
@@ -88,10 +91,11 @@ router.post('/', jsonParser, (req,res) => {
                                     res.status(500).json({message: 'Could not create'})
                                 })
                         }
-                        else {
-                            res.status(500).json({message:'Circuit Device does not exist'})
-                        }
-            })}
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        res.status(500).json({message:'Service Could not be created'})
+                    })}
             else {
                 res.status(500).json({message:'Customer does not exist'})
             }})
