@@ -29,13 +29,12 @@ router.get('/', jsonParser, (req,res) => {
 
    Request.find(filters)
        .limit(5)
-       .populate({ "path" : "service" })
-       .populate({ "path" : "circuit", "model": "Circuit", populate: [{
-           path: "zLocationDevice.deviceInfo.device", model: "Device"},{path: "aLocationDevice.deviceInfo.device",model:"Device"}]})
+       .populate({ "path" : "service" , model: "Service", populate: [{path: "customer", model:"Customer"},{path:"circuit", model: "Circuit" ,
+            populate: [{path: "zLocationDevice.deviceInfo.device", model: "Device"},{path: "aLocationDevice.deviceInfo.device", model:"Device"}]}]})
        .sort({'customer': 1})
-       .then(services => {
-           res.json({services: services.map(service => {
-               return service
+       .then(requests => {
+           res.json({requests: requests.map(request => {
+               return request
            })})
        })
        .catch(err => {
@@ -59,18 +58,19 @@ router.post('/', jsonParser, (req,res) => {
 
     Service.findOne({dataVlan:req.body.dataVlan,daDeviceName:req.body.daDeviceName})
         .then(service => {
-            console.log(req);
+            //console.log(req);
             if (service != null && Object.keys(service).length > 0) {
                 Request.findOne({serviceRequestNumber:req.body.serviceRequestNumber})
                     .then(request => {
+                        console.log(req.user);
                         if (request) {
-                            res.status(500).json({message: 'Circuit Device does not exist'})
+                            res.status(500).json({message: 'Request Already exists!'})
                         }
                         else {
                             Request.create({
                                 customerReferenceNumber: req.body.customerReferenceNumber,
                                 customerCompanyName: req.body.customerCompanyName,
-                                authorizedSubmitter: req.user.name,
+                                authorizedSubmitter: req.user.id,
                                 serviceRequestNumber: req.body.serviceRequestNumber,
                                 formSubmitDate: Date.now(),
                                 requestedProvDate:req.body.requestedProvDate,
@@ -88,10 +88,11 @@ router.post('/', jsonParser, (req,res) => {
                             })
                                 .then(res.status(200).json({message: 'Request has been created'}))
                                 .catch(err => {
-                                    console.log(err);
+                                    //console.log(err);
                                     res.status(500).json({message: 'Could not create Request'})
                                 })
                         }
+                            return console.log('Hello')
                     })
                     .catch(err => {
                         console.log(err);
@@ -127,7 +128,7 @@ router.put('/:id', jsonParser, (req,res) => {
                             Circuit.findOne({circuitId: req.body.circuitId})
                                 .then(circuit => {
                                     Request.findOne({_id:req.params.id})
-                                        .then(service => {
+                                        .then(request => {
                                             Request.update({
                                                 serviceClient: req.body.serviceClient,
                                                 serviceType: req.body.serviceType,
