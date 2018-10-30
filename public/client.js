@@ -19,7 +19,7 @@ function registerUser () {
         if(!(registrationInfo.password == registrationInfo.confirmPassword)) {
             console.log(registrationInfo);
             $('.js-registration-comment-box').html('<span class="registration-message">Passwords do not match, please correct</span>');
-            $('.js-registration-comment-box').prop('hidden', false);
+            unhideRegistrationCommentBox();
             }
         else {
            $.ajax({
@@ -36,11 +36,17 @@ function registerUser () {
 
 
 function registrationSuccessful() {
-    $('.js-registration-comment-box').html('Account successfully created, click <a href="./login.html">here</a> to log in."');
+    $('.js-registration-comment-box').html('Account successfully created, click <a href="./login.html">here</a> to log in.');
+    unhideRegistrationCommentBox();
 }
 
 function registrationFailed () {
     $('.js-registration-comment-box').text(error.responseJSON.message);
+    unhideRegistrationCommentBox();
+}
+
+function unhideRegistrationCommentBox() {
+    $('.js-registration-comment-box').prop('hidden', false);
 }
 
 $(registerUser);
