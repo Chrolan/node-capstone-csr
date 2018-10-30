@@ -39,12 +39,12 @@ const jwtAuth = passport.authenticate('jwt', { session: false });
 
 app.use(express.static("public"));
 
-app.use('/users/', usersRouter);
-app.use('/auth/', authRouter);
-app.use('/customers/', customerRouter);
-app.use('/devices/' ,  deviceRouter);
-app.use('/circuits/', circuitRouter);
-app.use('/services/',  serviceRouter);
+app.use('/users', usersRouter);
+app.use('/auth', authRouter);
+app.use('/customers', customerRouter);
+app.use('/devices' ,  deviceRouter);
+app.use('/circuits', circuitRouter);
+app.use('/services',  serviceRouter);
 app.use('/requests', jwtAuth, serviceRequestRouter );
 
 app.use('*', (req, res) => {

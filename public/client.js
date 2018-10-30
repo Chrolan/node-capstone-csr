@@ -1,8 +1,7 @@
-
 //set of functions to register user account
-
 function registerUser () {
     $('.register-form').submit(event => {
+
         event.preventDefault();
 
         const registrationInfo = {
@@ -17,17 +16,17 @@ function registerUser () {
             typeOfUser:$('#user-type').val()
         };
 
-        console.log(registrationInfo);
-
-        if(!(newUser.password == newUser.confirmPassword)) {
+        if(!(registrationInfo.password == registrationInfo.confirmPassword)) {
+            console.log(registrationInfo);
             $('.js-registration-comment-box').html('<span class="registration-message">Passwords do not match, please correct</span>');
             $('.js-registration-comment-box').prop('hidden', false);
             }
         else {
            $.ajax({
-               url : '/users/',
+               url : "/users",
+               dataType: "json",
                type: 'POST',
-               contentType : 'application/json',
+               contentType : "application/json",
                data: JSON.stringify(registrationInfo)
             })
                .then(registrationSuccessful)
@@ -44,4 +43,4 @@ function registrationFailed () {
     $('.js-registration-comment-box').text(error.responseJSON.message);
 }
 
-registerUser();
+$(registerUser);
