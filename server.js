@@ -41,10 +41,10 @@ app.use(express.static("public"));
 
 app.use('/users', usersRouter);
 app.use('/auth', authRouter);
-app.use('/customers', customerRouter);
-app.use('/devices' ,  deviceRouter);
-app.use('/circuits', circuitRouter);
-app.use('/services',  serviceRouter);
+app.use('/customers', jwtAuth, customerRouter);
+app.use('/devices' ,  jwtAuth, deviceRouter);
+app.use('/circuits', jwtAuth, circuitRouter);
+app.use('/services', jwtAuth, serviceRouter);
 app.use('/requests', jwtAuth, serviceRequestRouter );
 
 app.use('*', (req, res) => {

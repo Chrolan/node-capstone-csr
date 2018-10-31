@@ -5,20 +5,26 @@
     <title>Service Request System Login</title>
 </head>
 <body>
-    <main>
-		<div class="form-box">
-			<form class="form" id="login" method="post">
+    <main role="main">
+		<div class="form-box login-form">
+			<form class="login-form" id="login" method="post">
 				<h2>Log-in</h2>
 				<div class="login-input">
-					<label for="username">Username</label>
-					<input id="username" type="text" name="username"><br>
-					<label for="password">Password</label>
-					<input id="password" type="password" name="password">
+					<fieldset class="login-fields">
+						<legend for="username">Username</legend>
+						<input id="username" type="text" name="username" required/><br>
+						<legend for="password">Password</legend>
+						<input id="password" type="password" name="password" required/><br>
+                        <button class="login-button" type="submit" name="submit">Login</button>
+					</fieldset>
 				</div>
-				<button class="login-button" type="submit" name="submit">Login</button>
-				<div class="error-message" hidden>Incorrect password, please try again!</div>
+				<div class="error-message" hidden></div>
 			</form>
 		</div>
 	</main>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+    <script src="index.js"></script>
+
 </body>
 </html>

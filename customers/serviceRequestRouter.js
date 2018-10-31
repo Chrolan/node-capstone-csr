@@ -18,7 +18,7 @@ const jsonParser = bodyParser.json();
 router.get('/', jsonParser, (req,res) => {
 
     const filters = {};
-    const queryFields = [];
+    const queryFields = ['authorizedSubmitter'];
 
     //appends fields to filters object, which is later used by Request.find in filtering mongo search
     queryFields.forEach(field => {
