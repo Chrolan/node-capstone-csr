@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js"
-            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+
     <link href="css.css" rel="stylesheet" type="text/css"/>
     <title>Title</title>
 </head>
@@ -13,13 +12,25 @@
         <nav role="navigation" class="nav-bar">
             <div class="nav-bar-items">
                 <ul>
-                    <li><a href="/" id="my-requests-button" class="nav-button">My Requests</a></li>
-                    <li><a href="/" class="nav-button">Submit Request</a></li>
+                    <li><a href="#" id="my-requests-button" class="nav-button">My Requests</a></li>
+                    <li><a href="/" id="submit-request-page-button" class="nav-button">Submit Request</a></li>
                 </ul>
             </div>
         </nav>
     </header>
 
-    <script src="client.js"/>
+    <main role="main" class="main" aria-live="assertive" hidden>
+        <div class="content-box">
+
+        </div>
+    </main>
+
+    <footer role="doc-footnote" >
+
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+    <script src="client.js"></script>
+
 </body>
 </html>

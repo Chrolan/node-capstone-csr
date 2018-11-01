@@ -34,6 +34,27 @@ router.get('/', jsonParser, (req,res) => {
             populate: [{path: "zLocationDevice.deviceInfo.device", model: "Device"},{path: "aLocationDevice.deviceInfo.device", model:"Device"}]}]})
        .sort({'customer': 1})
        .then(requests => {
+           res.json({requests : requests.map(request => {
+               return {'request':request}
+           })})
+       })
+       .catch(err => {
+           console.log(err);
+           res.status(400).json({message: 'Could not retrieve'})
+       })
+    });
+
+router.get('/user-requests', jsonParser, (req,res) => {
+
+    const userId = req.user.id;
+
+   Request.find({'authorizedSubmitter':userId})
+       .limit(5)
+       .populate({path: "authorizedSubmitter", model: "User"})
+       .populate({ "path" : "service" , model: "Service", populate: [{path: "customer", model:"Customer"},{path:"circuit", model: "Circuit" ,
+            populate: [{path: "zLocationDevice.deviceInfo.device", model: "Device"},{path: "aLocationDevice.deviceInfo.device", model:"Device"}]}]})
+       .sort({'customer': 1})
+       .then(requests => {
            res.json({requests: requests.map(request => {
                return request
            })})
