@@ -27,6 +27,8 @@ router.get('/', jsonParser, (req,res) => {
         }
     });
 
+    console.log(req);
+
    Request.find(filters)
        .limit(5)
        .populate({path: "authorizedSubmitter", model: "User"})
@@ -34,7 +36,7 @@ router.get('/', jsonParser, (req,res) => {
             populate: [{path: "zLocationDevice.deviceInfo.device", model: "Device"},{path: "aLocationDevice.deviceInfo.device", model:"Device"}]}]})
        .sort({'customer': 1})
        .then(requests => {
-           res.json({requests : requests.map(request => {
+           res.json({requests: requests.map(request => {
                return {'request':request}
            })})
        })
@@ -48,6 +50,10 @@ router.get('/user-requests', jsonParser, (req,res) => {
 
     const userId = req.user.id;
 
+    const requests = []
+
+    console.log(req);
+
    Request.find({'authorizedSubmitter':userId})
        .limit(5)
        .populate({path: "authorizedSubmitter", model: "User"})
@@ -56,7 +62,7 @@ router.get('/user-requests', jsonParser, (req,res) => {
        .sort({'customer': 1})
        .then(requests => {
            res.json({requests: requests.map(request => {
-               return request
+               return {'request':request}
            })})
        })
        .catch(err => {
@@ -80,7 +86,7 @@ router.post('/', jsonParser, (req,res) => {
 
     Service.findOne({dataVlan:req.body.dataVlan,daDeviceName:req.body.daDeviceName})
         .then(service => {
-            console.log(req.user);
+            console.log(req);
             if (service != null && Object.keys(service).length > 0) {
                 Request.findOne({serviceRequestNumber:req.body.serviceRequestNumber})
                     .then(request => {

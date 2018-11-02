@@ -1,19 +1,25 @@
 //upon clicking of button, will search for submitted
 
-function renderRequestItem () {
+function renderRequestItem (data) {
     return `<tr class="request-item">
-                <td>${data.request.customer}</td>
+                <td>${data.request.customerReferenceNumber}</td>
             </tr>`
+}
+
+function renderTableHeaders () {
+    return `<table class="request-table">
+                <tr class="table-headers">
+                    <th>Customer Reference Number</th>
+                </tr>
+            </table>`
 }
 
 function displayList (data) {
     let listResults = data.requests.map((item,index) => renderRequestItem(item));
     //inserts the mapped items into requests list
-    $('.content-box').html(listResults);
-}
-
-function renderError () {
-    return `<span class="error-message">Oops! You may have typed in your location in wrong, try again!<br>Tip: Remember to use City, State in combination!</span>`
+    $('.content-box').html(renderTableHeaders);
+    $('.table-headers').after(listResults);
+    displayContent();
 }
 
 function getMyRequests () {
@@ -40,6 +46,10 @@ function createMyRequestsPage () {
         event.preventDefault();
         getMyRequests();
     })
+}
+
+function displayContent () {
+    $('.main').prop('hidden',false)
 }
 
 $(createMyRequestsPage);
