@@ -50,9 +50,7 @@ router.get('/user-requests', jsonParser, (req,res) => {
 
     const userId = req.user.id;
 
-    const requests = []
-
-    console.log(req);
+    console.log(req.user);
 
    Request.find({'authorizedSubmitter':userId})
        .limit(5)
@@ -86,11 +84,10 @@ router.post('/', jsonParser, (req,res) => {
 
     Service.findOne({dataVlan:req.body.dataVlan,daDeviceName:req.body.daDeviceName})
         .then(service => {
-            console.log(req);
+            console.log(req.user);
             if (service != null && Object.keys(service).length > 0) {
                 Request.findOne({serviceRequestNumber:req.body.serviceRequestNumber})
                     .then(request => {
-                        console.log(req.user);
                         if (request) {
                             res.status(500).json({message: 'Request Already exists!'})
                         }
