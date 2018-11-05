@@ -158,8 +158,14 @@ function serviceBuildFieldSet () {
                 <input id="bandwidth" />
                 <legend for="circuit-id">Circuit Id</legend>
                 <input id="circuit-id" />
-                <legend for="vlans">VLAN (Data/ Voice)</legend>
-                <input id="vlans" />
+                <legend for="circuit-id-comment">Circuit Id Comments</legend>
+                <input id="circuit-id-comment" />
+                <legend for="department-id">Department Id</legend>
+                <input id="department-id"/>
+                <legend for="data-vlan">VLAN (Data)</legend>
+                <input id="data-vlan" />
+                <legend for="-voice-vlan">VLAN (Voice)</legend>
+                <input id="voice-vlan" />
                 <legend for="sip-user">SIP Username / Password</legend>
                 <input id="sip-user" />
                 <legend for="data-center">Data Center</legend>
@@ -341,6 +347,51 @@ function postDevice (location) {
     })
 }
 
+//set of functions to post a circuit & service , at this time, will be unused by it's own web page. the point of the system is to request all services through
+//the request page. But the system will still benifit from making this modular
+
+function createCircuitJson () {
+
+    const circuit = {
+        circuitId: $('#circuit-id').val(),
+           zLocationDevice : {
+                deviceInfo:{
+                    device: $('#A-device-name').val(),
+                    devicePort: $('#A-device-port').val(),
+           }},
+            aLocationDevice : {
+                deviceInfo:{
+                    device: $('#Z-device-name').val(),
+                    devicePort: $('#Z-device-port').val(),
+           }},
+            circuitAdditionalInformation: $('#circuit-id-comment').val()
+    };
+
+    return circuit
+}
+
+function createServiceJson () {
+
+    const service = {
+        serviceType: $('#service-type').val(),
+        mediaType: $('#media-type').val(),
+        bandwidth: $('#bandwidth').val(),
+        departmentId: $('#department-id').val(),
+        dataVlan : $('#data-vlan').val(),
+        voiceVlan: $('#voice-vlan').val(),
+        dataCenter: $('#data-center').val(),
+        distributionArea : $('#distribution-area').val(),
+        daDeviceName: $('#da-device-name').val(),
+        fiberToDataCenter: $('#fiber-datacenter').val(),
+        splitterPigtail: $('#splitter-pigtail').val(),
+        fiberToOnt: $('#').val(),
+    };
+    return service
+}
+
+
+
+
 //set of functions to submit request creation from populated form from 'Submit Request' hyperlink
 //this is the highest level of record submitting, it will use all previous functions to build customer>device>service>request
 function createRequestForm () {
@@ -359,25 +410,42 @@ function createRequestForm () {
     })
 }
 
-function createRequestJson (location) {
+function createRequestJson () {
 
     const request = {
-
+        customerReferenceNumber: $('#customer-reference-number').val(),
+        serviceRequestNumber: {type:Number, required: true},
+        formSubmitDate: Date.now(),
+        requestedProvDate: $('#request-requested-date').val(),
+        targetInstallDate: $('#target-install-date').val(),
+        serviceRequestType: $('#service-request-type').val(),
+        serviceRequestPriority: $('#').val(),
+        serviceRequestDetails: $('#').val(),
+        serviceAffecting: {
+            yesOrNo :$('#service-affecting-yes-no').val(),
+            details: $('#service-affecting-yes-no-details').val()},
+        serviceProtected: {
+            yesOrNo :$('#service-protected-yes-no').val(),
+            details: $('#service-protected-yes-no-details').val()}
     }
 
     return request
 }
 
-function ajaxRequest (request) {
+function ajaxRequest (circuitJson,serviceJson,requestJson) {
 
-    console.log(request);
+    const requestData = {}
+
+    Object.keys(circuitJson).forEach(key => requestData[key] = circuitJson[key]);
+    Object.keys(serviceJson).forEach(key => requestData[key] = serviceJson[key]);
+    Object.keys(requestJson).forEach(key => requestData[key] = requestJson[key]);
 
     $.ajax({
-        url: '/Requests',
+        url: '/requests',
         type: 'POST',
         dataType: 'json',
         contentType: 'application/json',
-        data: JSON.stringify(request),
+        data: JSON.stringify(requestData),
         headers: {
             Authorization: `Bearer ${sessionStorage.getItem('Bearer')}`
         }
@@ -388,13 +456,13 @@ function ajaxRequest (request) {
         })
 }
 
-function postRequest (location) {
+function postRequest () {
 
     $('.content-box').on( 'submit', '#request-record-submit', event => {
 
         event.preventDefault();
 
-        
+        ajaxRequest(createCircuitJson,createServiceJson,createRequestJson)
 
     })
 }

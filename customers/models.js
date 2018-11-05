@@ -28,7 +28,6 @@ const serviceRequestSchema = mongoose.Schema ({
 //service schema will hold information of each service provided by Telco
 //service rides a circuit for a customer
 const serviceSchema = mongoose.Schema ({
-    serviceClient: {type: String, required: true},
     serviceType: {type: String, required: true},
     mediaType: {type: String, required: true},
     bandwidth: {type: String, required: true},

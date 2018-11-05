@@ -58,7 +58,7 @@ router.post('/', jsonParser, (req,res) => {
         }
     });
 
-    Customer.findOne({'customerName.lastName':req.body.customerName.lastName, customerClient:req.body.customerClient, customerBillingAccount: req.body.customerBillingAccount})
+    Customer.findOne({'customerName.lastName':req.body.customerName.lastName, customerBillingAccount: req.body.customerBillingAccount})
         .then(customer => {
             if (customer != null && Object.keys(customer).length > 0) {
                 Circuit.findOne({circuitId:req.body.circuitId})

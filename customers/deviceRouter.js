@@ -55,7 +55,6 @@ router.post('/', jsonParser, (req,res) => {
     //First finds device based on 3 attributes, if none found then creates. Cannot find based on ID because you won't know it at the time of creating new device
     Device.findOne({deviceName:req.body.deviceName,deviceSerialNumber:req.body.deviceSerialNumber})
         .then(device => {
-            console.log(device);
             if(device != null && Object.keys(device).length > 0) {
                 res.status(400).json({message: 'device already exists'})
             }

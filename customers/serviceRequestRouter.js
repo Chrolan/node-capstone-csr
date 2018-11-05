@@ -84,7 +84,7 @@ router.post('/', jsonParser, (req,res) => {
 
     Service.findOne({dataVlan:req.body.dataVlan,daDeviceName:req.body.daDeviceName})
         .then(service => {
-            console.log(req.user);
+            console.log(req.body);
             if (service != null && Object.keys(service).length > 0) {
                 Request.findOne({serviceRequestNumber:req.body.serviceRequestNumber})
                     .then(request => {
