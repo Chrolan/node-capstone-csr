@@ -353,10 +353,53 @@ function createRequestForm () {
         $('.creation-banner').after(customerBuildFieldSet);
         $('.creation-banner').after(serviceBuildFieldSet);
         $('.creation-banner').after(requestBuildFieldSet);
+        $('.record-submit').attr('id', 'request-record-submit');
 
         displayContent();
     })
 }
+
+function createRequestJson (location) {
+
+    const request = {
+
+    }
+
+    return request
+}
+
+function ajaxRequest (request) {
+
+    console.log(request);
+
+    $.ajax({
+        url: '/Requests',
+        type: 'POST',
+        dataType: 'json',
+        contentType: 'application/json',
+        data: JSON.stringify(request),
+        headers: {
+            Authorization: `Bearer ${sessionStorage.getItem('Bearer')}`
+        }
+    })
+        .then(sendAlert)
+        .catch(err => {
+            console.log(err);
+        })
+}
+
+function postRequest (location) {
+
+    $('.content-box').on( 'submit', '#request-record-submit', event => {
+
+        event.preventDefault();
+
+        
+
+    })
+}
+
+
 
 function sendAlert () {
     return alert('POST worked')
@@ -367,3 +410,4 @@ $(createCustomerForm);
 $(createRequestForm);
 $(postCustomer);
 $(postDevice("One"));
+$(postRequest);
