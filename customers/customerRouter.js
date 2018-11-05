@@ -61,7 +61,6 @@ router.post('/', jsonParser, (req,res) => {
             }
             else {
                 Customer.create({
-                    customerClient: req.body.customerClient,
                     customerType: req.body.customerType,
                     customerName: req.body.customerName,
                     customerAddress : {
@@ -76,6 +75,7 @@ router.post('/', jsonParser, (req,res) => {
                     customerSiteGps: req.body.customerSiteGps,
                     customerEntryGps: req.body.customerEntryGps,
                     customerAddressNote: req.body.customerAddressNote,
+                    customerSiteWarnings: req.body.customerSiteWarnings,
                     customerGateCode: req.body.customerGateCode
                 })
                     .then(customer => {
@@ -86,6 +86,7 @@ router.post('/', jsonParser, (req,res) => {
                         });
                     })
                     .catch(err => {
+                        console.log(err);
                         res.status(500).json({message: 'Could not create'})
                     })
             }

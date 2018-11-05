@@ -47,7 +47,7 @@ const serviceSchema = mongoose.Schema ({
 
 //end devices available on network for inventory
 const deviceSchema = mongoose.Schema({
-    deviceName: {type: String, required: true},
+    deviceName: {type: String, required: true, unique:true},
     deviceManufacturer: {type: String, required: true},
     deviceModel: {type: String, required: true},
     deviceSerialNumber: {type: String, required: true},
@@ -57,7 +57,7 @@ const deviceSchema = mongoose.Schema({
 
 //circuit has 2 ends, a device at each
 const circuitSchema = mongoose.Schema({
-   circuitId: {type: String, required: true},
+   circuitId: {type: String, required: true, unique:true},
    zLocationDevice : {
         deviceInfo:{
             device: {type: mongoose.Schema.ObjectId, ref: 'Device', required: true },
@@ -73,7 +73,6 @@ const circuitSchema = mongoose.Schema({
 
 //telco customer for inventorying
 const customerSchema = mongoose.Schema ({
-    customerClient: {type: String, required: true},
     customerType: {type: String, required: true},
     customerName: {
         firstName: {type: String, required: true},
@@ -86,11 +85,12 @@ const customerSchema = mongoose.Schema ({
         customerState: {type: String, required: true},
         customerZip: {type: String, required: true}
     },
-    customerBillingAccount: {type: String, required: true},
-    customerPhone: {type: String, required: true},
+    customerBillingAccount: {type: String, required: true, unique:true},
+    customerPhone: {type: String},
     customerSiteGps: {type: Number},
     customerEntryGps: {type: Number},
     customerAddressNote: { type: String},
+    customerSiteWarnings: {type: String},
     customerGateCode: {type:String},
 });
 

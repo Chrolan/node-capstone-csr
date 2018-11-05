@@ -73,7 +73,7 @@ $(createMyRequestsPage);
 function formBuild () {
     return `<form class="record-submit">
                 <h2 class="creation-banner"></h2>
-                <button class="submit-button" type="submit">Submit!</button>
+                <input id="request-submit-button" class="submit-button" type="submit"/>
             </form>`
 }
 
@@ -82,29 +82,31 @@ function customerBuildFieldSet () {
     return `<h2>End Customer Details</h2>
             <fieldset class=customer-fields">
                 <legend for="customer-type">Customer Type</legend>
-                <select id="customer-type">
+                <select required ="customer-type">
                     <option value="Residential">Residential</option>
                     <option value="Business">Business</option>
                     <option value="Wholesale">Wholesale</option>
                 </select>
-                <legend for="first-name">First Name</legend>
-                <input id="first-name" />
-                <legend for="last-name>Last Name">Last Name</legend>
-                <input id="last-name" />
+                <legend for="customer-identification">Customer Id</legend>
+                <input required id="customer-identification"/>
+                <legend for="customer-first-name">First Name</legend>
+                <input required id="customer-first-name" />
+                <legend for="customer-last-name>Last Name">Last Name</legend>
+                <input required id="customer-last-name" />
                 <legend for="customer-address-line-one">Customer Address</legend>
-                <input id="customer-address-line-one" />
+                <input required id="customer-address-line-one" />
                 <legend for="customer-address-line-two">Customer Address 2</legend>
                 <input id="customer-address-line-two"/>
                 <legend for="customer-city">Customer City</legend>
-                <input id="customer-city"/>
+                <input required id="customer-city"/>
                 <legend for="customer-state">Customer State</legend>
-                <input id="customer-state"/>
+                <input required id="customer-state"/>
                 <legend for="customer-zip">Customer Zip</legend>
-                <input id="customer-zip"/>
+                <input required id="customer-zip"/>
                 <legend for="customer-phone">Customer Phone</legend>
-                <input id="customer-phone"/>
+                <input id="customer-phone"  placeholder="123-456-7890" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required/>
                 <legend for="customer-site-gps">Customer Site GPS</legend>
-                <input id="customer-gps"/>
+                <input id="customer-site-gps"/>
                 <legend for="customer-entry-gps">Customer Entry GPS</legend>
                 <input id="customer-entry-gps"/>
                 <legend for="customer-address-note">Customer Address Note</legend>
@@ -121,7 +123,7 @@ function deviceBuildFieldSet (location) {
     return `<h2> ${location} Device Details</h2>
             <fieldset class="${location}-device-fields">
                 <legend for="${location}-device-name">Device Name</legend>
-                <input id=""${location}-device-name""/>
+                <input id="${location}-device-name"/>
                 <legend for="${location}-device-manufacturer">Device Manufacturer</legend>
                 <select id="${location}-device-manufacturer">
                     <option value="Calix">Calix</option>
@@ -178,11 +180,169 @@ function serviceBuildFieldSet () {
 function requestBuildFieldSet () {
     return `<h2>Service Request General Information</h2>
             <fieldset class="general-information-fields">
-                <legend for=""></legend>
-                <input id=""/>
+                <legend for="customer-reference-number">Customer Reference Number</legend>
+                <input id="customer-reference-number" />
+                <legend for="request-requested-date">Request Provisioning Date</legend>
+                <input id="request-requested-date" type="date"/>
+                <legend for="target-install-date">Target Install Date</legend>
+                <input id="target-install-date" type="date"/>
+            <h2>Service Request Details</h2>
+                <legend for="service-request-type">Service Request Type</legend>
+                <input id="service-request-type"/>
+                <legend for="service-request-priority">Service Request Priority</legend>
+                <input id="service-request-priority"/>
+                <legend for="service-affecting-yes-no">Service Affecting?</legend>
+                <select id="service-affecting-yes-no">
+                    <option value="false">No</option>
+                    <option value="true">Yes</option>
+                </select>    
+                <legend for="service-affecting-yes-no-details">Affecting Details</legend>
+                <input id="service-affecting-yes-no-details"/>
+                <legend for="service-protected-yes-no">Service Protected?</legend>
+                <select id="service-protected-yes-no">
+                    <option value="false">No</option>
+                    <option value="true">Yes</option>
+                </select>
+                <legend for="service-protected-yes-no-details">Protected Details</legend>
+                <input id="service-protected-yes-no-details"/>
             </fieldset>`
 }
 
+//set of functions to submit customer creation from populated form from 'Customer Creation' hyperlink
+//functions will ensure they can be used in higher order of operations record submitting
+function createCustomerForm () {
+    $('#customer-request-page-button').on('click', event =>{
+        event.preventDefault();
+
+        $('.content-box').html(formBuild);
+        $('.creation-banner').after(customerBuildFieldSet);
+        $('.record-submit').attr('id', 'customer-record-submit');
+
+        displayContent();
+    })
+}
+
+function createCustomerJson () {
+
+    const customer = {
+        customerType: $('#customer-type').val(),
+        customerName: {
+            firstName: $('#customer-first-name').val(),
+            lastName: $('#customer-last-name').val()
+        },
+        customerAddress : {
+            customerStreet1: $('#customer-address-line-one').val(),
+            customerStreet2: $('#customer-address-line-two').val(),
+            customerCity: $('#customer-city').val(),
+            customerState: $('#customer-state').val(),
+            customerZip: $('#customer-zip').val()
+        },
+        customerBillingAccount:$('#customer-identification').val(),
+        customerPhone: $('#customer-phone').val(),
+        customerSiteGps: $('#customer-site-gps').val(),
+        customerEntryGps: $('#customer-entry-gps').val(),
+        customerAddressNote: $('#customer-address-note').val(),
+        customerSiteWarnings: $('#customer-site-warnings').val(),
+        customerGateCode: $('#customer-gate-code').val()
+    }
+
+    return customer
+}
+
+function ajaxCustomer (customer) {
+
+    console.log(customer);
+
+    $.ajax({
+        url: '/customers',
+        type: 'POST',
+        dataType: 'json',
+        contentType: 'application/json',
+        data: JSON.stringify(customer),
+        headers: {
+            Authorization: `Bearer ${sessionStorage.getItem('Bearer')}`
+        }
+    })
+        .then(sendAlert)
+        .catch(err => {
+            console.log(err);
+        })
+}
+
+function postCustomer () {
+
+    $('.content-box').on( 'submit', '#customer-record-submit', event => {
+
+        event.preventDefault();
+
+        ajaxCustomer(createCustomerJson())
+
+    })
+}
+
+
+
+//set of functions to submit device creation from populated form from 'Device Creation' hyperlink
+//functions will ensure they can be used in higher order of operations record submitting
+function createDeviceForm () {
+    $('#device-request-page-button').on('click', event =>{
+        event.preventDefault();
+
+        $('.content-box').html(formBuild);
+        $('.creation-banner').after(deviceBuildFieldSet("One"));
+        $('.record-submit').attr('id', 'device-record-submit');
+
+        displayContent();
+    })
+}
+
+function createDeviceJson (location) {
+
+    const device = {
+        deviceName: $(`#${location}-device-name`).val(),
+        deviceManufacturer: $(`#${location}-device-manufacturer`).val(),
+        deviceModel: $(`#${location}-device-model`).val(),
+        deviceSerialNumber: $(`#${location}-device-port`).val(),
+        deviceIpInformation:$(`#${location}-device-serial`).val(),
+        deviceMac: $(`#${location}-device-mac`).val(),
+    };
+
+    return device
+}
+
+function ajaxDevice (device) {
+
+    console.log(device);
+
+    $.ajax({
+        url: '/devices',
+        type: 'POST',
+        dataType: 'json',
+        contentType: 'application/json',
+        data: JSON.stringify(device),
+        headers: {
+            Authorization: `Bearer ${sessionStorage.getItem('Bearer')}`
+        }
+    })
+        .then(sendAlert)
+        .catch(err => {
+            console.log(err);
+        })
+}
+
+function postDevice (location) {
+
+    $('.content-box').on( 'submit', '#device-record-submit', event => {
+
+        event.preventDefault();
+
+        ajaxDevice(createDeviceJson(location))
+
+    })
+}
+
+//set of functions to submit request creation from populated form from 'Submit Request' hyperlink
+//this is the highest level of record submitting, it will use all previous functions to build customer>device>service>request
 function createRequestForm () {
     $('#submit-request-page-button').on('click', event =>{
         event.preventDefault();
@@ -192,9 +352,18 @@ function createRequestForm () {
         $('.creation-banner').after(deviceBuildFieldSet("A"));
         $('.creation-banner').after(customerBuildFieldSet);
         $('.creation-banner').after(serviceBuildFieldSet);
+        $('.creation-banner').after(requestBuildFieldSet);
 
         displayContent();
     })
 }
 
+function sendAlert () {
+    return alert('POST worked')
+}
+
+$(createDeviceForm);
+$(createCustomerForm);
 $(createRequestForm);
+$(postCustomer);
+$(postDevice("One"));
