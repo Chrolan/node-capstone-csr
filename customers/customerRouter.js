@@ -42,6 +42,8 @@ router.get('/', jsonParser, (req,res) => {
 //customer creation endpoint
 router.post('/', jsonParser, (req,res) => {
 
+    console.log(req.body);
+
     const requiredFields = ['customerType','customerName','customerAddress','customerBillingAccount','customerPhone'];
 
     requiredFields.forEach(field => {
@@ -76,7 +78,8 @@ router.post('/', jsonParser, (req,res) => {
                     customerEntryGps: req.body.customerEntryGps,
                     customerAddressNote: req.body.customerAddressNote,
                     customerSiteWarnings: req.body.customerSiteWarnings,
-                    customerGateCode: req.body.customerGateCode
+                    customerGateCode: req.body.customerGateCode,
+                    authorizedSubmitter: req.user.id,
                 })
                     .then(customer => {
                         res.status(200).json({

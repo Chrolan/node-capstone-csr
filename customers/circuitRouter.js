@@ -81,7 +81,8 @@ router.post('/', jsonParser, (req,res) => {
                                                 devicePort: req.body.aLocationDevice.deviceInfo.devicePort,
                                             }
                                         },
-                                        circuitAdditionalInformation: req.body.circuitAdditionalInformation
+                                        circuitAdditionalInformation: req.body.circuitAdditionalInformation,
+                                        authorizedSubmitter: req.user.id
                                     })
                                         .then(res.status(200).json({message: 'Circuit has been created'}))
                                         .catch(err => {

@@ -139,7 +139,8 @@ router.put('/:id', jsonParser, (req,res) => {
                                                 splitterPigtail: req.body.splitterPigtail,
                                                 fiberToOnt: req.body.fiberToOnt,
                                                 customer: customer._id,
-                                                circuit: circuit._id
+                                                circuit: circuit._id,
+                                                authorizedSubmitter: req.user.id
                                             })
                                                 .then(res.status(200).json({message: 'Service has been updated'}))
                                                 .catch(err => {

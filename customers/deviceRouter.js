@@ -66,6 +66,7 @@ router.post('/', jsonParser, (req,res) => {
 					    deviceSerialNumber: req.body.deviceSerialNumber,
 					    deviceIpInformation: req.body.deviceIpInformation,
 					    deviceMac: req.body.deviceMac,
+                        authorizedSubmitter: req.user.id
 				    })
                     .then(device => {
                         res.status(200).json(device.serialize());

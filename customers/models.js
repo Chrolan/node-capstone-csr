@@ -41,7 +41,8 @@ const serviceSchema = mongoose.Schema ({
     splitterPigtail: {type: String, required: true},
     fiberToOnt: {type: String, required: true},
     customer: {type: mongoose.Schema.ObjectId, ref: 'Customer'},
-    circuit: {type: mongoose.Schema.ObjectId, ref: 'Circuit'}
+    circuit: {type: mongoose.Schema.ObjectId, ref: 'Circuit'},
+    authorizedSubmitter: {type: mongoose.Schema.ObjectId, ref:'User'}
 });
 
 //end devices available on network for inventory
@@ -52,6 +53,7 @@ const deviceSchema = mongoose.Schema({
     deviceSerialNumber: {type: String, required: true},
     deviceIpInformation: {type: String, required: true},
     deviceMac: {type: String, required: true},
+    authorizedSubmitter: {type: mongoose.Schema.ObjectId, ref:'User'}
 });
 
 //circuit has 2 ends, a device at each
@@ -67,7 +69,8 @@ const circuitSchema = mongoose.Schema({
             device: {type: mongoose.Schema.ObjectId, ref: 'Device'},
             devicePort: {type: String, required: true},
    }},
-    circuitAdditionalInformation: {type: String}
+    circuitAdditionalInformation: {type: String},
+    authorizedSubmitter: {type: mongoose.Schema.ObjectId, ref:'User'},
 });
 
 //telco customer for inventorying
@@ -91,6 +94,7 @@ const customerSchema = mongoose.Schema ({
     customerAddressNote: { type: String},
     customerSiteWarnings: {type: String},
     customerGateCode: {type:String},
+    authorizedSubmitter: {type: mongoose.Schema.ObjectId, ref:'User'}
 });
 
 customerSchema.virtual('nameOfCustomer').get(function () {

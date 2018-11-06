@@ -82,7 +82,7 @@ function customerBuildFieldSet () {
     return `<h2>End Customer Details</h2>
             <fieldset class=customer-fields">
                 <legend for="customer-type">Customer Type</legend>
-                <select required ="customer-type">
+                <select id="customer-type" required ="customer-type">
                     <option value="Residential">Residential</option>
                     <option value="Business">Business</option>
                     <option value="Wholesale">Wholesale</option>
@@ -407,6 +407,7 @@ function createRequestForm () {
         $('.record-submit').attr('id', 'request-record-submit');
 
         displayContent();
+
     })
 }
 
@@ -436,10 +437,6 @@ function ajaxRequest (circuitJson,serviceJson,requestJson) {
 
     const requestData = {}
 
-    Object.keys(circuitJson).forEach(key => requestData[key] = circuitJson[key]);
-    Object.keys(serviceJson).forEach(key => requestData[key] = serviceJson[key]);
-    Object.keys(requestJson).forEach(key => requestData[key] = requestJson[key]);
-
     $.ajax({
         url: '/requests',
         type: 'POST',
@@ -462,7 +459,8 @@ function postRequest () {
 
         event.preventDefault();
 
-        ajaxRequest(createCircuitJson,createServiceJson,createRequestJson)
+        ajaxCustomer(createCustomerJson())
+
 
     })
 }
