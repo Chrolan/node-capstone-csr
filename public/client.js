@@ -142,6 +142,8 @@ function deviceBuildFieldSet (location) {
                 <input id="${location}-device-port"/>
                 <legend for="${location}-device-serial">Device Serial</legend>
                 <input id="${location}-device-serial"/>
+                <legend for="${location}-device-ip">Device IP</legend>
+                <input id="${location}-device-ip"/>
                 <legend for="${location}-device-mac">Device Mac</legend>
                 <input id="${location}-device-mac"/>                
             </fieldset>`
@@ -197,6 +199,8 @@ function requestBuildFieldSet () {
                 <input id="service-request-type"/>
                 <legend for="service-request-priority">Service Request Priority</legend>
                 <input id="service-request-priority"/>
+                <legend for="service-request-details">Service Request Details</legend>
+                <input id="service-request-details"/>
                 <legend for="service-affecting-yes-no">Service Affecting?</legend>
                 <select id="service-affecting-yes-no">
                     <option value="false">No</option>
@@ -304,8 +308,8 @@ function createDeviceJson (location) {
         deviceName: $(`#${location}-device-name`).val(),
         deviceManufacturer: $(`#${location}-device-manufacturer`).val(),
         deviceModel: $(`#${location}-device-model`).val(),
-        deviceSerialNumber: $(`#${location}-device-port`).val(),
-        deviceIpInformation:$(`#${location}-device-serial`).val(),
+        deviceSerialNumber: $(`#${location}-device-serial`).val(),
+        deviceIpInformation:$(`#${location}-device-ip`).val(),
         deviceMac: $(`#${location}-device-mac`).val(),
     };
 
@@ -374,11 +378,11 @@ function ajaxCircuit (circuit) {
             })
 }
 
-
-
 function createServiceJson () {
 
     const service = {
+        customerBillingAccount:$('#customer-identification').val(),
+        circuitId: $('#circuit-id').val(),
         serviceType: $('#service-type').val(),
         mediaType: $('#media-type').val(),
         bandwidth: $('#bandwidth').val(),
@@ -390,8 +394,9 @@ function createServiceJson () {
         daDeviceName: $('#da-device-name').val(),
         fiberToDataCenter: $('#fiber-datacenter').val(),
         splitterPigtail: $('#splitter-pigtail').val(),
-        fiberToOnt: $('#').val(),
+        fiberToOnt: $('#fiber-ont').val()
     };
+
     return service
 }
 
@@ -438,8 +443,8 @@ function createRequestJson () {
         requestedProvDate: $('#request-requested-date').val(),
         targetInstallDate: $('#target-install-date').val(),
         serviceRequestType: $('#service-request-type').val(),
-        serviceRequestPriority: $('#').val(),
-        serviceRequestDetails: $('#').val(),
+        serviceRequestPriority: $('#service-request-priority').val(),
+        serviceRequestDetails: $('#service-request-details').val(),
         serviceAffecting: {
             yesOrNo :$('#service-affecting-yes-no').val(),
             details: $('#service-affecting-yes-no-details').val()},
@@ -472,9 +477,21 @@ function postRequest () {
         event.preventDefault();
 
         ajaxCustomer(createCustomerJson())
-            .then(ajaxDevice(createDeviceJson("Z")))
-            .then(ajaxDevice(createDeviceJson("A")))
-            .then(ajaxCircuit(createCircuitJson()))
+            .then(function () {
+                return ajaxDevice(createDeviceJson("Z"))
+            })
+            .then(function () {
+                return ajaxDevice(createDeviceJson("A"))
+            })
+            .then(function () {
+                return ajaxCircuit(createCircuitJson())
+            })
+            .then(function () {
+                return ajaxService(createServiceJson)
+            })
+            .catch(err => {
+                console.log(err);
+            })
     })
 }
 

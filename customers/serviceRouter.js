@@ -58,14 +58,13 @@ router.post('/', jsonParser, (req,res) => {
         }
     });
 
-    Customer.findOne({'customerName.lastName':req.body.customerName.lastName, customerBillingAccount: req.body.customerBillingAccount})
+    Customer.findOne({customerBillingAccount: req.body.customerBillingAccount})
         .then(customer => {
             if (customer != null && Object.keys(customer).length > 0) {
                 Circuit.findOne({circuitId:req.body.circuitId})
                     .then(circuit => {
                         if (circuit != null && Object.keys(circuit).length > 0) {
                             Service.create({
-                                serviceClient: req.body.serviceClient,
                                 serviceType: req.body.serviceType,
                                 mediaType: req.body.mediaType,
                                 bandwidth: req.body.bandwidth,
@@ -89,15 +88,15 @@ router.post('/', jsonParser, (req,res) => {
                                 })
                         }
                         else {
-                            res.status(500).json({message:'Circuit does not exist'})
+                            res.status(501).json({message:'Circuit does not exist'})
                         }
             })}
             else {
-                res.status(500).json({message:'Customer does not exist'})
+                res.status(502).json({message:'Customer does not exist'})
             }})
         .catch(err => {
             console.log(err);
-            res.status(500).json({message: 'Error looking up Service'})
+            res.status(503).json({message: 'Error looking up Service'})
         });
 });
 

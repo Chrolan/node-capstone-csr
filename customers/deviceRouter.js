@@ -48,7 +48,6 @@ router.post('/', jsonParser, (req,res) => {
     requiredFields.forEach(field => {
         if (!(field in req.body)) {
             const message = `Missing \`${field}\` in request body`;
-            console.error(message);
             return res.status(400).send(message);
         }
     });
@@ -57,7 +56,7 @@ router.post('/', jsonParser, (req,res) => {
     Device.findOne({deviceName:req.body.deviceName,deviceSerialNumber:req.body.deviceSerialNumber})
         .then(device => {
             if(device != null && Object.keys(device).length > 0) {
-                res.status(400).json({message: 'device already exists'})
+                res.status(400).json({message: 'Device already exists'})
             }
             else {
                 Device.create({
