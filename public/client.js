@@ -255,24 +255,20 @@ function createCustomerJson () {
     return customer
 }
 
-function ajaxCustomer (customer) {
+function ajaxCustomer (customer,callback) {
 
-    console.log(customer);
 
-    $.ajax({
-        url: '/customers',
-        type: 'POST',
-        dataType: 'json',
-        contentType: 'application/json',
-        data: JSON.stringify(customer),
-        headers: {
-            Authorization: `Bearer ${sessionStorage.getItem('Bearer')}`
-        }
-    })
-        .then(sendAlert)
-        .catch(err => {
-            console.log(err);
-        })
+
+    return $.ajax({
+                url: '/customers',
+                type: 'POST',
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify(customer),
+                headers: {
+                    Authorization: `Bearer ${sessionStorage.getItem('Bearer')}`
+                }
+            })
 }
 
 function postCustomer () {
@@ -281,7 +277,7 @@ function postCustomer () {
 
         event.preventDefault();
 
-        ajaxCustomer(createCustomerJson())
+        ajaxCustomer(createCustomerJson(),sendAlert())
 
     })
 }
@@ -318,22 +314,16 @@ function createDeviceJson (location) {
 
 function ajaxDevice (device) {
 
-    console.log(device);
-
-    $.ajax({
-        url: '/devices',
-        type: 'POST',
-        dataType: 'json',
-        contentType: 'application/json',
-        data: JSON.stringify(device),
-        headers: {
-            Authorization: `Bearer ${sessionStorage.getItem('Bearer')}`
-        }
-    })
-        .then(sendAlert)
-        .catch(err => {
-            console.log(err);
-        })
+    return  $.ajax({
+                url: '/devices',
+                type: 'POST',
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify(device),
+                headers: {
+                    Authorization: `Bearer ${sessionStorage.getItem('Bearer')}`
+                }
+            })
 }
 
 function postDevice (location) {
@@ -342,7 +332,7 @@ function postDevice (location) {
 
         event.preventDefault();
 
-        ajaxDevice(createDeviceJson(location))
+        ajaxDevice(createDeviceJson(location),sendAlert())
 
     })
 }
@@ -370,6 +360,22 @@ function createCircuitJson () {
     return circuit
 }
 
+function ajaxCircuit (circuit) {
+
+    return $.ajax({
+                url: '/circuits',
+                type: 'POST',
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify(circuit),
+                headers: {
+                    Authorization: `Bearer ${sessionStorage.getItem('Bearer')}`
+                }
+            })
+}
+
+
+
 function createServiceJson () {
 
     const service = {
@@ -389,7 +395,19 @@ function createServiceJson () {
     return service
 }
 
+function ajaxService (service) {
 
+    return $.ajax({
+                url: '/services',
+                type: 'POST',
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify(service),
+                headers: {
+                    Authorization: `Bearer ${sessionStorage.getItem('Bearer')}`
+                }
+            })
+}
 
 
 //set of functions to submit request creation from populated form from 'Submit Request' hyperlink
@@ -435,22 +453,16 @@ function createRequestJson () {
 
 function ajaxRequest (circuitJson,serviceJson,requestJson) {
 
-    const requestData = {}
-
-    $.ajax({
-        url: '/requests',
-        type: 'POST',
-        dataType: 'json',
-        contentType: 'application/json',
-        data: JSON.stringify(requestData),
-        headers: {
-            Authorization: `Bearer ${sessionStorage.getItem('Bearer')}`
-        }
-    })
-        .then(sendAlert)
-        .catch(err => {
-            console.log(err);
-        })
+    return $.ajax({
+                url: '/requests',
+                type: 'POST',
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify(),
+                headers: {
+                    Authorization: `Bearer ${sessionStorage.getItem('Bearer')}`
+                }
+            })
 }
 
 function postRequest () {
@@ -460,15 +472,16 @@ function postRequest () {
         event.preventDefault();
 
         ajaxCustomer(createCustomerJson())
-
-
+            .then(ajaxDevice(createDeviceJson("Z")))
+            .then(ajaxDevice(createDeviceJson("A")))
+            .then(ajaxCircuit(createCircuitJson()))
     })
 }
 
 
 
 function sendAlert () {
-    return alert('POST worked')
+    return console.log('POST worked')
 }
 
 $(createDeviceForm);

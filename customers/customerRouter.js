@@ -28,9 +28,10 @@ router.get('/', jsonParser, (req,res) => {
    Customer.find(filters)
    .limit(5)
    .sort({'customerName': 1})
+       .populate({path: "authorizedSubmitter", model: "User"})
    .then(customers => {
        res.json({customers: customers.map(customer => {
-           return customer.serialize()
+           return customer
        })})
    })
    .catch(err => {

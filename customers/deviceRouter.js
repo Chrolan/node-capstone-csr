@@ -27,10 +27,11 @@ router.get('/', jsonParser, (req,res) => {
 
    Device.find(filters)
        .limit(5)
+       .populate({path:'authorizedSubmitter', model: 'User', select: "username companyName"})
        .sort({'deviceName': 1})
        .then(devices => {
            res.json({devices: devices.map(device => {
-               return device.serialize()
+               return device
            })})
    })
    .catch(err => {
