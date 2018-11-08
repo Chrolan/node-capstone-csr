@@ -43,8 +43,6 @@ router.get('/', jsonParser, (req,res) => {
 //customer creation endpoint
 router.post('/', jsonParser, (req,res) => {
 
-    console.log(req.body);
-
     const requiredFields = ['customerType','customerName','customerAddress','customerBillingAccount','customerPhone'];
 
     requiredFields.forEach(field => {
@@ -58,7 +56,6 @@ router.post('/', jsonParser, (req,res) => {
     //First finds customer based on 3 attributes, if none found then creates. Cannot find based on ID because you won't know it at the time of creating new customer
     Customer.findOne({'customerName.lastName':req.body.customerName.lastName, customerClient:req.body.customerClient, customerBillingAccount: req.body.customerBillingAccount})
         .then(customer => {
-            console.log(customer);
             if(customer != null && Object.keys(customer).length > 0) {
                 res.status(400).json({message: 'Customer already exists'})
             }

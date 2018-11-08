@@ -7,15 +7,14 @@ mongoose.Promise = global.Promise;
 //due to it being used as the record holder for addition of items into telco database by end user
 const serviceRequestSchema = mongoose.Schema ({
     customerReferenceNumber: { type: String, required: true},
-    customerCompanyName: { type: String, required: true},
     authorizedSubmitter: {type: mongoose.Schema.ObjectId, ref:'User'},
-    serviceRequestNumber: {type:Number, required: true},
+    serviceRequestNumber: {type:Number},
     formSubmitDate: {type: String, required: true},
     requestedProvDate:{type: String, required: true},
     targetInstallDate: {type: String, required: true},
     serviceRequestType: { type: String, required: true},
     serviceRequestPriority: { type: String, required: true},
-    serviceRequestDetails: { type: String, required: true},
+    serviceRequestDetails: { type: String},
     serviceAffecting: {
         yesOrNo :{ type: Boolean, required:true},
         details: {type: String}},

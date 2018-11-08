@@ -188,6 +188,8 @@ function serviceBuildFieldSet () {
 function requestBuildFieldSet () {
     return `<h2>Service Request General Information</h2>
             <fieldset class="general-information-fields">
+                <legend for="request-number">Request Number</legend>
+                <input id="request-number" />
                 <legend for="customer-reference-number">Customer Reference Number</legend>
                 <input id="customer-reference-number" />
                 <legend for="request-requested-date">Request Provisioning Date</legend>
@@ -437,8 +439,9 @@ function createRequestForm () {
 function createRequestJson () {
 
     const request = {
+        dataVlan : $('#data-vlan').val(),
+        daDeviceName: $('#da-device-name').val(),
         customerReferenceNumber: $('#customer-reference-number').val(),
-        serviceRequestNumber: {type:Number, required: true},
         formSubmitDate: Date.now(),
         requestedProvDate: $('#request-requested-date').val(),
         targetInstallDate: $('#target-install-date').val(),
@@ -456,14 +459,14 @@ function createRequestJson () {
     return request
 }
 
-function ajaxRequest (circuitJson,serviceJson,requestJson) {
+function ajaxRequest (request) {
 
     return $.ajax({
                 url: '/requests',
                 type: 'POST',
                 dataType: 'json',
                 contentType: 'application/json',
-                data: JSON.stringify(),
+                data: JSON.stringify(request),
                 headers: {
                     Authorization: `Bearer ${sessionStorage.getItem('Bearer')}`
                 }
@@ -477,25 +480,41 @@ function postRequest () {
         event.preventDefault();
 
         ajaxCustomer(createCustomerJson())
+            .catch(err => {
+                console.log(err.responseJSON.message);
+            })
             .then(function () {
                 return ajaxDevice(createDeviceJson("Z"))
+            })
+            .catch(err => {
+                console.log(err.responseJSON.message);
             })
             .then(function () {
                 return ajaxDevice(createDeviceJson("A"))
             })
+            .catch(err => {
+                console.log(err.responseJSON.message);
+            })
             .then(function () {
                 return ajaxCircuit(createCircuitJson())
             })
+            .catch(err => {
+                console.log(err.responseJSON.message);
+            })
             .then(function () {
-                return ajaxService(createServiceJson)
+                return ajaxService(createServiceJson())
             })
             .catch(err => {
-                console.log(err);
+                console.log(err.responseJSON.message);
+            })
+            .then(function () {
+                return ajaxRequest(createRequestJson())
+            })
+            .catch(err => {
+                console.log(err.responseJSON.message);
             })
     })
 }
-
-
 
 function sendAlert () {
     return console.log('POST worked')

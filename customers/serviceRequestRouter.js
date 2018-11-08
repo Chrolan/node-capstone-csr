@@ -72,6 +72,8 @@ router.get('/user-requests', jsonParser, (req,res) => {
 //service creation endpoint
 router.post('/', jsonParser, (req,res) => {
 
+    console.log(req.body);
+
     const requiredFields = [];
 
     requiredFields.forEach(field => {
@@ -84,9 +86,8 @@ router.post('/', jsonParser, (req,res) => {
 
     Service.findOne({dataVlan:req.body.dataVlan,daDeviceName:req.body.daDeviceName})
         .then(service => {
-            console.log(req.body);
             if (service != null && Object.keys(service).length > 0) {
-                Request.findOne({serviceRequestNumber:req.body.serviceRequestNumber})
+                Request.findOne({customerReferenceNumber:req.body.customerReferenceNumber})
                     .then(request => {
                         if (request) {
                             res.status(500).json({message: 'Request Already exists!'})
@@ -94,7 +95,6 @@ router.post('/', jsonParser, (req,res) => {
                         else {
                             Request.create({
                                 customerReferenceNumber: req.body.customerReferenceNumber,
-                                customerCompanyName: req.body.customerCompanyName,
                                 authorizedSubmitter: req.user.id,
                                 serviceRequestNumber: req.body.serviceRequestNumber,
                                 formSubmitDate: Date.now(),

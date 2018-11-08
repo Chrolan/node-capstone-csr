@@ -58,37 +58,38 @@ router.post('/', jsonParser, (req,res) => {
     //Nested look ups of 2 devices to make sure Z and A location devices existed before creating circuit
     Device.findOne({deviceName:req.body.aLocationDevice.deviceInfo.device})
         .then(aDevice => {
-            console.log(aDevice);
             if (aDevice != null && Object.keys(aDevice).length > 0) {
                 Device.findOne({deviceName:req.body.zLocationDevice.deviceInfo.device})
                     .then(zDevice => {
-                        console.log(zDevice);
                         if (zDevice != null && Object.keys(zDevice).length > 0) {
                             Circuit.findOne({circuitId: req.body.circuitId})
                                 .then(circuit => {
-                                    console.log(circuit);
-                                    Circuit.create({
-                                        circuitId: req.body.circuitId,
-                                        zLocationDevice: {
-                                            deviceInfo: {
-                                                device: zDevice._id,
-                                                devicePort: req.body.zLocationDevice.deviceInfo.devicePort,
-                                            }
-                                        },
-                                        aLocationDevice: {
-                                            deviceInfo: {
-                                                device: aDevice._id,
-                                                devicePort: req.body.aLocationDevice.deviceInfo.devicePort,
-                                            }
-                                        },
-                                        circuitAdditionalInformation: req.body.circuitAdditionalInformation,
-                                        authorizedSubmitter: req.user.id
-                                    })
-                                        .then(res.status(200).json({message: 'Circuit has been created'}))
-                                        .catch(err => {
-                                            console.log(err);
-                                            res.status(500).json({message: 'Could not create'})
-                                        })
+                                    if(circuit != null && Object.keys(circuit).length > 0) {
+                                            res.status(400).json({message: 'Circuit already exists'})
+                                        }
+                                        else    {
+                                            Circuit.create({
+                                                circuitId: req.body.circuitId,
+                                                zLocationDevice: {
+                                                    deviceInfo: {
+                                                        device: zDevice._id,
+                                                        devicePort: req.body.zLocationDevice.deviceInfo.devicePort,
+                                                    }
+                                                },
+                                                aLocationDevice: {
+                                                    deviceInfo: {
+                                                        device: aDevice._id,
+                                                        devicePort: req.body.aLocationDevice.deviceInfo.devicePort,
+                                                    }
+                                                },
+                                                circuitAdditionalInformation: req.body.circuitAdditionalInformation,
+                                                authorizedSubmitter: req.user.id,
+                                            })
+                                                .then(res.status(200).json({message: 'Circuit has been created'}))
+                                                .catch(err => {
+                                                    console.log(err);
+                                                    res.status(500).json({message: 'Could not create'})
+                                                })}
                                 })
                                 .catch(err => {
                                     console.log(err);
