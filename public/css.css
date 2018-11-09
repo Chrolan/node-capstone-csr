@@ -1,0 +1,29 @@
+* {
+    box-sizing: border-box;
+    font-family: 'Noto Serif', serif;
+}
+ul li, ul {
+    display: inline-block;
+    margin-right: 20px;
+}
+fieldset {
+  text-align: left;
+  border: none;
+}
+label:focus-within, label:hover {
+  background-color: yellow;
+}
+td {
+    padding: 10px;
+    border: black solid 1px;
+    text-align: center;
+    margin: 10px;
+}
+th {
+    text-align: center;
+    padding: 10px;
+}
+tr:focus-within, tr:hover {
+    background-color: limegreen;
+    font-weight: bold;
+}

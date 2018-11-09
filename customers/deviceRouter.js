@@ -40,6 +40,25 @@ router.get('/', jsonParser, (req,res) => {
    })
 });
 
+router.get('/user-requests', jsonParser, (req,res) => {
+
+    const userId = req.user.id;
+
+   Device.find({'authorizedSubmitter':userId})
+       .limit(5)
+       .populate({path:'authorizedSubmitter', model: 'User', select: "username companyName"})
+       .sort({'deviceName': 1})
+       .then(devices => {
+           res.json({devices: devices.map(device => {
+               return {'device':device}
+           })})
+   })
+   .catch(err => {
+       console.log(err);
+       res.status(400).json({message: 'Could not retrieve'})
+   })
+});
+
 //device creation endpoint
 router.post('/', jsonParser, (req,res) => {
 

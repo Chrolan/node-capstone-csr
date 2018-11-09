@@ -50,8 +50,6 @@ router.get('/user-requests', jsonParser, (req,res) => {
 
     const userId = req.user.id;
 
-    console.log(req.user);
-
    Request.find({'authorizedSubmitter':userId})
        .limit(5)
        .populate({path: "authorizedSubmitter", model: "User"})
@@ -72,8 +70,6 @@ router.get('/user-requests', jsonParser, (req,res) => {
 //service creation endpoint
 router.post('/', jsonParser, (req,res) => {
 
-    console.log(req.body);
-
     const requiredFields = [];
 
     requiredFields.forEach(field => {
@@ -90,7 +86,7 @@ router.post('/', jsonParser, (req,res) => {
                 Request.findOne({customerReferenceNumber:req.body.customerReferenceNumber})
                     .then(request => {
                         if (request) {
-                            res.status(500).json({message: 'Request Already exists!'})
+                            res.status(400).json({message: 'Request Already exists!'})
                         }
                         else {
                             Request.create({

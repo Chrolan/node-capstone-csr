@@ -26,7 +26,7 @@ function renderTableHeaders () {
             </table>`
 }
 //passes headers to container, then passes request GET info through that to create table
-function displayList (data) {
+function displaRequests (data) {
     let listResults = data.requests.map((item,index) => renderRequestItem(item));
     //inserts the mapped items into requests list
     $('.content-box').html(renderTableHeaders);
@@ -45,8 +45,7 @@ function getMyRequests () {
         }
     })
         .then(data => {
-            console.log(data);
-            displayList(data)
+            displaRequests(data)
         })
         .catch(err => {
             console.log(err);
@@ -66,6 +65,64 @@ function displayContent () {
 
 $(createMyRequestsPage);
 
+//Set of functions to get device data and display it
+function renderDeviceItem (data) {
+
+    return `<tr class="request-item">
+                <td>${data.device.deviceName}</td>
+                <td>${data.device.deviceManufacturer}</td>
+                <td>${data.device.deviceModel}</td>
+                <td>${data.device.deviceSerialNumber}</td>
+                <td>${data.device.deviceMac}</td>
+            </tr>`
+}
+//headers for table
+function renderDeviceTableHeaders () {
+    return `<table class="request-table">
+                <tr class="table-headers">
+                    <th>Device Name</th>
+                    <th>Manufacturer</th>
+                    <th>Model</th>
+                    <th>Serial Number</th>
+                    <th>MAC Address</th>
+                </tr>
+            </table>`
+}
+//passes headers to container, then passes request GET info through that to create table
+function displayDevices (data) {
+    let listResults = data.devices.map((item,index) => renderDeviceItem(item));
+    //inserts the mapped items into requests list
+    $('.content-box').html(renderDeviceTableHeaders);
+    $('.table-headers').after(listResults);
+    displayContent();
+}
+//simple ajax call to user requests using the bearer auth token stored in session storage after log in
+function getMyDevices () {
+    $.ajax({
+        url:"/devices/user-requests",
+        dataType:"json",
+        contentType: "application/json",
+        type: "GET",
+        headers: {
+            Authorization: `Bearer ${sessionStorage.getItem('Bearer')}`
+        }
+    })
+        .then(data => {
+            displayDevices(data)
+        })
+        .catch(err => {
+            console.log(err);
+        })
+}
+
+function createDevicesPage () {
+    $('#my-devices-page-button').on('click', event => {
+        event.preventDefault();
+        getMyDevices();
+    })
+}
+
+$(createDevicesPage);
 
 //set of functions to create table upon clicking 'submit request' hyperlink
 //building individual field sets per type of data schema, this will allow for calling on separate pages w/o having to repeat code
@@ -81,39 +138,39 @@ function customerBuildFieldSet () {
 
     return `<h2>End Customer Details</h2>
             <fieldset class=customer-fields">
-                <legend for="customer-type">Customer Type</legend>
+                <label for="customer-type">Customer Type</label>
                 <select id="customer-type" required ="customer-type">
                     <option value="Residential">Residential</option>
                     <option value="Business">Business</option>
                     <option value="Wholesale">Wholesale</option>
                 </select>
-                <legend for="customer-identification">Customer Id</legend>
+                <label for="customer-identification">Customer Id</label>
                 <input required id="customer-identification"/>
-                <legend for="customer-first-name">First Name</legend>
+                <label for="customer-first-name">First Name</label>
                 <input required id="customer-first-name" />
-                <legend for="customer-last-name>Last Name">Last Name</legend>
+                <label for="customer-last-name>Last Name">Last Name</label>
                 <input required id="customer-last-name" />
-                <legend for="customer-address-line-one">Customer Address</legend>
+                <label for="customer-address-line-one">Customer Address</label>
                 <input required id="customer-address-line-one" />
-                <legend for="customer-address-line-two">Customer Address 2</legend>
+                <label for="customer-address-line-two">Customer Address 2</label>
                 <input id="customer-address-line-two"/>
-                <legend for="customer-city">Customer City</legend>
+                <label for="customer-city">Customer City</label>
                 <input required id="customer-city"/>
-                <legend for="customer-state">Customer State</legend>
+                <label for="customer-state">Customer State</label>
                 <input required id="customer-state"/>
-                <legend for="customer-zip">Customer Zip</legend>
+                <label for="customer-zip">Customer Zip</label>
                 <input required id="customer-zip"/>
-                <legend for="customer-phone">Customer Phone</legend>
+                <label for="customer-phone">Customer Phone</label>
                 <input id="customer-phone"  placeholder="123-456-7890" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required/>
-                <legend for="customer-site-gps">Customer Site GPS</legend>
+                <label for="customer-site-gps">Customer Site GPS</label>
                 <input id="customer-site-gps"/>
-                <legend for="customer-entry-gps">Customer Entry GPS</legend>
+                <label for="customer-entry-gps">Customer Entry GPS</label>
                 <input id="customer-entry-gps"/>
-                <legend for="customer-address-note">Customer Address Note</legend>
+                <label for="customer-address-note">Customer Address Note</label>
                 <input id="customer-address-note"/>
-                <legend for="customer-site-warnings">Customer Site Warnings</legend>
+                <label for="customer-site-warnings">Customer Site Warnings</label>
                 <input id="customer-site-warnings"/>
-                <legend for="customer-gate-code">Customer Gate Code/Access</legend>
+                <label for="customer-gate-code">Customer Gate Code/Access</label>
                 <input id="customer-gate-code"/>
             </fieldset>`
 }
@@ -122,29 +179,29 @@ function deviceBuildFieldSet (location) {
 
     return `<h2> ${location} Device Details</h2>
             <fieldset class="${location}-device-fields">
-                <legend for="${location}-device-name">Device Name</legend>
+                <label for="${location}-device-name">Device Name</label>
                 <input id="${location}-device-name"/>
-                <legend for="${location}-device-manufacturer">Device Manufacturer</legend>
+                <label for="${location}-device-manufacturer">Device Manufacturer</label>
                 <select id="${location}-device-manufacturer">
                     <option value="Calix">Calix</option>
                     <option value="Fujitsu">Fujitsu</option>
                     <option value="Juniper">Juniper</option>
                     <option value="Juniper">Juniper</option>
                 </select>
-                <legend for="${location}-device-model">Device Model</legend>
+                <label for="${location}-device-model">Device Model</label>
                 <select id="${location}-device-model">
                     <option value="E7">E7</option>
                     <option value="MX480">Fujitsu</option>
                     <option value="9500">Juniper</option>
                     <option value="844GE-1">Juniper</option>
                 </select>
-                <legend for="${location}-device-port">Device Port</legend>
+                <label for="${location}-device-port">Device Port</label>
                 <input id="${location}-device-port"/>
-                <legend for="${location}-device-serial">Device Serial</legend>
+                <label for="${location}-device-serial">Device Serial</label>
                 <input id="${location}-device-serial"/>
-                <legend for="${location}-device-ip">Device IP</legend>
+                <label for="${location}-device-ip">Device IP</label>
                 <input id="${location}-device-ip"/>
-                <legend for="${location}-device-mac">Device Mac</legend>
+                <label for="${location}-device-mac">Device Mac</label>
                 <input id="${location}-device-mac"/>                
             </fieldset>`
 }
@@ -152,35 +209,35 @@ function deviceBuildFieldSet (location) {
 function serviceBuildFieldSet () {
     return `<h2>Service Details</h2>
             <fieldset class="service-fields">
-                <legend for="service-type">Service Type</legend>
+                <label for="service-type">Service Type</label>
                 <input id="service-type" />
-                <legend for="media-type">Media Type</legend>
+                <label for="media-type">Media Type</label>
                 <input id="media-type" />
-                <legend for="bandwidth">Bandwidth</legend>
+                <label for="bandwidth">Bandwidth</label>
                 <input id="bandwidth" />
-                <legend for="circuit-id">Circuit Id</legend>
+                <label for="circuit-id">Circuit Id</label>
                 <input id="circuit-id" />
-                <legend for="circuit-id-comment">Circuit Id Comments</legend>
+                <label for="circuit-id-comment">Circuit Id Comments</label>
                 <input id="circuit-id-comment" />
-                <legend for="department-id">Department Id</legend>
+                <label for="department-id">Department Id</label>
                 <input id="department-id"/>
-                <legend for="data-vlan">VLAN (Data)</legend>
+                <label for="data-vlan">VLAN (Data)</label>
                 <input id="data-vlan" />
-                <legend for="-voice-vlan">VLAN (Voice)</legend>
+                <label for="-voice-vlan">VLAN (Voice)</label>
                 <input id="voice-vlan" />
-                <legend for="sip-user">SIP Username / Password</legend>
+                <label for="sip-user">SIP Username / Password</label>
                 <input id="sip-user" />
-                <legend for="data-center">Data Center</legend>
+                <label for="data-center">Data Center</label>
                 <input id="data-center" />
-                <legend for="distribution-area">Distribution Area</legend>
+                <label for="distribution-area">Distribution Area</label>
                 <input id="distribution-area" />
-                <legend for="da-device-name">DA Device Name</legend>
+                <label for="da-device-name">DA Device Name</label>
                 <input id="da-device-name" />
-                <legend for="fiber-datacenter">Fiber to DataCenter</legend>
+                <label for="fiber-datacenter">Fiber to DataCenter</label>
                 <input id="fiber-datacenter" />
-                <legend for="splitter-pigtail">Splitter Pigtail</legend>
+                <label for="splitter-pigtail">Splitter Pigtail</label>
                 <input id="splitter-pigtail" />
-                <legend for="fiber-ont">Fiber to ONT</legend>
+                <label for="fiber-ont">Fiber to ONT</label>
                 <input id="fiber-ont" />
             </fieldset>`
 }
@@ -188,34 +245,36 @@ function serviceBuildFieldSet () {
 function requestBuildFieldSet () {
     return `<h2>Service Request General Information</h2>
             <fieldset class="general-information-fields">
-                <legend for="request-number">Request Number</legend>
+                <label for="request-number">Request Number</label>
                 <input id="request-number" />
-                <legend for="customer-reference-number">Customer Reference Number</legend>
+                <label for="customer-reference-number">Customer Reference Number</label>
                 <input id="customer-reference-number" />
-                <legend for="request-requested-date">Request Provisioning Date</legend>
+                <label for="request-requested-date">Request Provisioning Date</label>
                 <input id="request-requested-date" type="date"/>
-                <legend for="target-install-date">Target Install Date</legend>
+                <label for="target-install-date">Target Install Date</label>
                 <input id="target-install-date" type="date"/>
+            </fieldset>
             <h2>Service Request Details</h2>
-                <legend for="service-request-type">Service Request Type</legend>
+            <fieldset class="general-information-fields-2">
+                <label for="service-request-type">Service Request Type</label>
                 <input id="service-request-type"/>
-                <legend for="service-request-priority">Service Request Priority</legend>
+                <label for="service-request-priority">Service Request Priority</label>
                 <input id="service-request-priority"/>
-                <legend for="service-request-details">Service Request Details</legend>
+                <label for="service-request-details">Service Request Details</label>
                 <input id="service-request-details"/>
-                <legend for="service-affecting-yes-no">Service Affecting?</legend>
+                <label for="service-affecting-yes-no">Service Affecting?</label>
                 <select id="service-affecting-yes-no">
                     <option value="false">No</option>
                     <option value="true">Yes</option>
                 </select>    
-                <legend for="service-affecting-yes-no-details">Affecting Details</legend>
+                <label for="service-affecting-yes-no-details">Affecting Details</label>
                 <input id="service-affecting-yes-no-details"/>
-                <legend for="service-protected-yes-no">Service Protected?</legend>
+                <label for="service-protected-yes-no">Service Protected?</label>
                 <select id="service-protected-yes-no">
                     <option value="false">No</option>
                     <option value="true">Yes</option>
                 </select>
-                <legend for="service-protected-yes-no-details">Protected Details</legend>
+                <label for="service-protected-yes-no-details">Protected Details</label>
                 <input id="service-protected-yes-no-details"/>
             </fieldset>`
 }

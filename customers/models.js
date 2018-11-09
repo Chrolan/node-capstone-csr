@@ -40,7 +40,7 @@ const serviceSchema = mongoose.Schema ({
     splitterPigtail: {type: String, required: true},
     fiberToOnt: {type: String, required: true},
     customer: {type: mongoose.Schema.ObjectId, ref: 'Customer'},
-    circuit: {type: mongoose.Schema.ObjectId, ref: 'Circuit'},
+    circuit: {type: mongoose.Schema.ObjectId, ref: 'Circuit', unique: true},
     authorizedSubmitter: {type: mongoose.Schema.ObjectId, ref:'User'}
 });
 
