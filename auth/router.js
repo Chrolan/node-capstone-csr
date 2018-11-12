@@ -33,4 +33,15 @@ router.post('/refresh', jwtAuth, (req, res) => {
   res.json({authToken});
 });
 
+router.get('/api/protected', jwtAuth, (req, res) => {
+  console.log(req.user);
+
+  return res.json({
+    username: req.user.username,
+    firstname : req.user.firstName,
+    lastname: req.user.lastName
+  });
+
+});
+
 module.exports = { router };

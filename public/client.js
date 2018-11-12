@@ -1,5 +1,4 @@
 //upon clicking of 'my requests' hyperlink, will search for submitted requests and return in table format
-
 function renderRequestItem (data) {
 
     const submitDate = new Date(parseInt(data.request.formSubmitDate)).toString();
@@ -136,146 +135,292 @@ function formBuild () {
 
 function customerBuildFieldSet () {
 
-    return `<h2>End Customer Details</h2>
-            <fieldset class=customer-fields">
-                <label for="customer-type">Customer Type</label>
-                <select id="customer-type" required ="customer-type">
-                    <option value="Residential">Residential</option>
-                    <option value="Business">Business</option>
-                    <option value="Wholesale">Wholesale</option>
-                </select>
-                <label for="customer-identification">Customer Id</label>
-                <input required id="customer-identification"/>
-                <label for="customer-first-name">First Name</label>
-                <input required id="customer-first-name" />
-                <label for="customer-last-name>Last Name">Last Name</label>
-                <input required id="customer-last-name" />
-                <label for="customer-address-line-one">Customer Address</label>
-                <input required id="customer-address-line-one" />
-                <label for="customer-address-line-two">Customer Address 2</label>
-                <input id="customer-address-line-two"/>
-                <label for="customer-city">Customer City</label>
-                <input required id="customer-city"/>
-                <label for="customer-state">Customer State</label>
-                <input required id="customer-state"/>
-                <label for="customer-zip">Customer Zip</label>
-                <input required id="customer-zip"/>
-                <label for="customer-phone">Customer Phone</label>
-                <input id="customer-phone"  placeholder="123-456-7890" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required/>
-                <label for="customer-site-gps">Customer Site GPS</label>
-                <input id="customer-site-gps"/>
-                <label for="customer-entry-gps">Customer Entry GPS</label>
-                <input id="customer-entry-gps"/>
-                <label for="customer-address-note">Customer Address Note</label>
-                <input id="customer-address-note"/>
-                <label for="customer-site-warnings">Customer Site Warnings</label>
-                <input id="customer-site-warnings"/>
-                <label for="customer-gate-code">Customer Gate Code/Access</label>
-                <input id="customer-gate-code"/>
+    return `
+            <fieldset class="customer-fields row">
+            <legend class="col-12">End Customer Details</legend>
+                <div class="col-6">
+                    <label for="customer-type">Customer Type
+                        <select id="customer-type" required ="customer-type">
+                            <option value="Residential">Residential</option>
+                            <option value="Business">Business</option>
+                            <option value="Wholesale">Wholesale</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="col-6">
+                    <label for="customer-identification">Customer Id
+                        <input required id="customer-identification"/>
+                    </label>
+                </div>
+                <div class="col-6">
+                    <label for="customer-first-name">First Name
+                        <input required id="customer-first-name" />
+                    </label>
+                </div>
+                <div class="col-6">
+                    <label for="customer-last-name>Last Name">Last Name
+                        <input required id="customer-last-name" />
+                    </label>
+                </div>
+                <div class="col-6">
+                    <label for="customer-address-line-one">Customer Address
+                        <input required id="customer-address-line-one" />
+                    </label>
+                </div>
+                <div class="col-6">
+                    <label for="customer-address-line-two">Customer Address 2
+                        <input id="customer-address-line-two"/>
+                    </label>
+                </div>
+                <div class="col-6">
+                    <label for="customer-city">Customer City
+                        <input required id="customer-city"/>
+                    </label>
+                </div>
+                <div class="col-6">  
+                    <label for="customer-state">Customer State
+                        <input required id="customer-state"/>
+                    </label>
+                </div>
+                <div class="col-6">
+                    <label for="customer-zip">Customer Zip
+                        <input required id="customer-zip"/>
+                    </label>
+                </div>
+                <div class="col-6">
+                    <label for="customer-phone">Customer Phone
+                        <input id="customer-phone"  placeholder="123-456-7890" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required/>
+                    </label>
+                </div>
+                <div class="col-6">
+                        <label for="customer-site-gps">Customer Site GPS
+                        <input id="customer-site-gps"/>
+                        </label>
+                </div>
+                <div class="col-6">
+                    <label for="customer-entry-gps">Customer Entry GPS
+                        <input id="customer-entry-gps"/>
+                    </label>
+                </div>
+                <div class="col-6">
+                    <label for="customer-address-note">Customer Address Note
+                        <input id="customer-address-note"/>
+                    </label>
+                </div>
+                <div class="col-6">
+                    <label for="customer-site-warnings">Customer Site Warnings
+                        <input id="customer-site-warnings"/>
+                    </label>
+                </div>
+                <div class="col-6">
+                    <label for="customer-gate-code">Customer Gate Code/Access
+                        <input id="customer-gate-code"/>
+                    </label>
+                </div>
             </fieldset>`
 }
 
 function deviceBuildFieldSet (location) {
 
-    return `<h2> ${location} Device Details</h2>
-            <fieldset class="${location}-device-fields">
-                <label for="${location}-device-name">Device Name</label>
-                <input id="${location}-device-name"/>
-                <label for="${location}-device-manufacturer">Device Manufacturer</label>
-                <select id="${location}-device-manufacturer">
-                    <option value="Calix">Calix</option>
-                    <option value="Fujitsu">Fujitsu</option>
-                    <option value="Juniper">Juniper</option>
-                    <option value="Juniper">Juniper</option>
-                </select>
-                <label for="${location}-device-model">Device Model</label>
-                <select id="${location}-device-model">
-                    <option value="E7">E7</option>
-                    <option value="MX480">Fujitsu</option>
-                    <option value="9500">Juniper</option>
-                    <option value="844GE-1">Juniper</option>
-                </select>
-                <label for="${location}-device-port">Device Port</label>
-                <input id="${location}-device-port"/>
-                <label for="${location}-device-serial">Device Serial</label>
-                <input id="${location}-device-serial"/>
-                <label for="${location}-device-ip">Device IP</label>
-                <input id="${location}-device-ip"/>
-                <label for="${location}-device-mac">Device Mac</label>
-                <input id="${location}-device-mac"/>                
+    return `<fieldset class="${location}-device-fields row">
+            <legend class="col-12"> ${location} Device Details</legend>
+                <div class="col-6">
+                    <label for="${location}-device-name">Device Name
+                        <input id="${location}-device-name"/>
+                    </label>
+                </div>
+                <div class="col-6">
+                    <label for="${location}-device-manufacturer">Device Manufacturer
+                        <select id="${location}-device-manufacturer">
+                            <option value="Calix">Calix</option>
+                            <option value="Fujitsu">Fujitsu</option>
+                            <option value="Juniper">Juniper</option>
+                            <option value="Juniper">Juniper</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="col-6">
+                    <label for="${location}-device-model">Device Model
+                        <select id="${location}-device-model">
+                            <option value="E7">E7</option>
+                            <option value="MX480">Fujitsu</option>
+                            <option value="9500">Juniper</option>
+                            <option value="844GE-1">Juniper</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="col-6">
+                    <label for="${location}-device-port">Device Port
+                        <input id="${location}-device-port"/>
+                    </label>
+                </div>
+                <div class="col-6">
+                    <label for="${location}-device-serial">Device Serial
+                        <input id="${location}-device-serial"/>
+                    </label>
+                </div>
+                <div class="col-6">
+                    <label for="${location}-device-ip">Device IP
+                        <input id="${location}-device-ip"/>
+                    </label>
+                </div>
+                <div class="col-6">
+                    <label for="${location}-device-mac">Device Mac
+                        <input id="${location}-device-mac"/>        
+                    </label>
+                </div>        
             </fieldset>`
 }
 
 function serviceBuildFieldSet () {
-    return `<h2>Service Details</h2>
-            <fieldset class="service-fields">
-                <label for="service-type">Service Type</label>
-                <input id="service-type" />
-                <label for="media-type">Media Type</label>
-                <input id="media-type" />
-                <label for="bandwidth">Bandwidth</label>
-                <input id="bandwidth" />
-                <label for="circuit-id">Circuit Id</label>
-                <input id="circuit-id" />
-                <label for="circuit-id-comment">Circuit Id Comments</label>
-                <input id="circuit-id-comment" />
-                <label for="department-id">Department Id</label>
-                <input id="department-id"/>
-                <label for="data-vlan">VLAN (Data)</label>
-                <input id="data-vlan" />
-                <label for="-voice-vlan">VLAN (Voice)</label>
-                <input id="voice-vlan" />
-                <label for="sip-user">SIP Username / Password</label>
-                <input id="sip-user" />
-                <label for="data-center">Data Center</label>
-                <input id="data-center" />
-                <label for="distribution-area">Distribution Area</label>
-                <input id="distribution-area" />
-                <label for="da-device-name">DA Device Name</label>
-                <input id="da-device-name" />
-                <label for="fiber-datacenter">Fiber to DataCenter</label>
-                <input id="fiber-datacenter" />
-                <label for="splitter-pigtail">Splitter Pigtail</label>
-                <input id="splitter-pigtail" />
-                <label for="fiber-ont">Fiber to ONT</label>
-                <input id="fiber-ont" />
+    return `<fieldset class="service-fields row">
+            <legend class="col-12">Service Details</legend>
+                <div class="col-6">
+                    <label for="service-type">Service Type
+                        <input id="service-type" />
+                    </label>
+                </div> 
+                <div class="col-6">
+                    <label for="media-type">Media Type
+                        <input id="media-type" />
+                    </label>
+                </div> 
+                <div class="col-6">
+                    <label for="bandwidth">Bandwidth
+                        <input id="bandwidth" />
+                    </label>
+                </div> 
+                <div class="col-6">
+                    <label for="circuit-id">Circuit Id
+                        <input id="circuit-id" />
+                    </label>
+                </div> 
+                <div class="col-6">
+                    <label for="circuit-id-comment">Circuit Id Comments
+                        <input id="circuit-id-comment" />
+                    </label>
+                </div> 
+                <div class="col-6">
+                    <label for="department-id">Department Id
+                        <input id="department-id"/>
+                    </label>
+                </div> 
+                <div class="col-6">
+                    <label for="data-vlan">VLAN (Data)
+                        <input id="data-vlan" />
+                    </label>
+                </div> 
+                <div class="col-6">
+                    <label for="-voice-vlan">VLAN (Voice)
+                        <input id="voice-vlan" />
+                    </label>
+                </div> 
+                <div class="col-6">
+                    <label for="sip-user">SIP Username / Password
+                        <input id="sip-user" />
+                    </label>
+                </div> 
+                <div class="col-6">
+                    <label for="data-center">Data Center
+                        <input id="data-center" />
+                    </label>
+                </div> 
+                <div class="col-6">
+                    <label for="distribution-area">Distribution Area
+                        <input id="distribution-area" />
+                    </label>
+                </div> 
+                <div class="col-6">
+                    <label for="da-device-name">DA Device Name
+                        <input id="da-device-name" />
+                    </label>
+                </div> 
+                <div class="col-6">
+                    <label for="fiber-datacenter">Fiber to DataCenter
+                        <input id="fiber-datacenter" />
+                    </label>
+                </div> 
+                <div class="col-6">
+                    <label for="splitter-pigtail">Splitter Pigtail
+                        <input id="splitter-pigtail" />
+                    </label>
+                </div> 
+                <div class="col-6">
+                    <label for="fiber-ont">Fiber to ONT
+                        <input id="fiber-ont" />
+                    </label>
+                </div> 
             </fieldset>`
 }
 
 function requestBuildFieldSet () {
-    return `<h2>Service Request General Information</h2>
-            <fieldset class="general-information-fields">
-                <label for="request-number">Request Number</label>
-                <input id="request-number" />
-                <label for="customer-reference-number">Customer Reference Number</label>
-                <input id="customer-reference-number" />
-                <label for="request-requested-date">Request Provisioning Date</label>
-                <input id="request-requested-date" type="date"/>
-                <label for="target-install-date">Target Install Date</label>
-                <input id="target-install-date" type="date"/>
+    return `<fieldset class="general-information-fields row">
+            <legend class="col-12">Service Request General Information</legend>
+                <div class="col-6">
+                    <label for="request-number">Request Number
+                        <input id="request-number" />
+                    </label>
+                </div> 
+                <div class="col-6"> 
+                    <label for="customer-reference-number">Customer Reference Number
+                        <input id="customer-reference-number" />
+                    </label>
+                </div> 
+                <div class="col-6">
+                    <label for="request-requested-date">Request Provisioning Date
+                        <input id="request-requested-date" type="date"/>
+                    </label>
+                </div> 
+                <div class="col-6">
+                    <label for="target-install-date">Target Install Date
+                        <input id="target-install-date" type="date"/>
+                    </label>
+                </div> 
             </fieldset>
-            <h2>Service Request Details</h2>
-            <fieldset class="general-information-fields-2">
-                <label for="service-request-type">Service Request Type</label>
-                <input id="service-request-type"/>
-                <label for="service-request-priority">Service Request Priority</label>
-                <input id="service-request-priority"/>
-                <label for="service-request-details">Service Request Details</label>
-                <input id="service-request-details"/>
-                <label for="service-affecting-yes-no">Service Affecting?</label>
-                <select id="service-affecting-yes-no">
-                    <option value="false">No</option>
-                    <option value="true">Yes</option>
-                </select>    
-                <label for="service-affecting-yes-no-details">Affecting Details</label>
-                <input id="service-affecting-yes-no-details"/>
-                <label for="service-protected-yes-no">Service Protected?</label>
-                <select id="service-protected-yes-no">
-                    <option value="false">No</option>
-                    <option value="true">Yes</option>
-                </select>
-                <label for="service-protected-yes-no-details">Protected Details</label>
-                <input id="service-protected-yes-no-details"/>
+            
+            <fieldset class="general-information-fields-2 row">
+            <legend class="col-12">Service Request Details</legend>
+                <div class="col-6">
+                    <label for="service-request-type">Service Request Type
+                        <input id="service-request-type"/>
+                    </label>
+                </div> 
+                <div class="col-6">
+                    <label for="service-request-priority">Service Request Priority
+                        <input id="service-request-priority"/>
+                    </label>
+                </div> 
+                <div class="col-6">
+                    <label for="service-request-details">Service Request Details
+                        <input id="service-request-details"/>
+                    </label>
+                </div> 
+                <div class="col-6">
+                    <label for="service-affecting-yes-no">Service Affecting?
+                        <select id="service-affecting-yes-no">
+                            <option value="false">No</option>
+                            <option value="true">Yes</option>
+                        </select>  
+                    </label>
+                </div>   
+                <div class="col-6">
+                    <label for="service-affecting-yes-no-details">Affecting Details
+                        <input id="service-affecting-yes-no-details"/>
+                    </label>
+                </div>
+                <div class="col-6">
+                    <label for="service-protected-yes-no">Service Protected?
+                        <select id="service-protected-yes-no">
+                            <option value="false">No</option>
+                            <option value="true">Yes</option>
+                        </select>
+                    </label>
+                </div> 
+                <div class="col-6">
+                    <label for="service-protected-yes-no-details">Protected Details
+                        <input id="service-protected-yes-no-details"/>
+                    </label>
+                </div> 
             </fieldset>`
 }
 

@@ -24,30 +24,10 @@
   width: 100%;
 }
 
-/* Non-mobile, grid */
-@media only screen and (min-width: 540px) {
 
-  .col-4 {
-    width: 33.33333%;
-  }
-
-  .col-6 {
-    width: 50%;
-  }
-
-  .col-8 {
-    width: 66.666666%;
-  }
-
-  .col-12 {
-    width: 100%;
-  }
-  #map {
-    height: 350px;
-}
-}
 
 @media only screen and (min-width: 850px) {
+
   .col-4 {
     width: 33.33333%;
   }
@@ -65,3 +45,4 @@
   }
 
 }
+

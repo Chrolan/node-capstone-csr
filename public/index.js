@@ -1,3 +1,14 @@
+function checkIfLoggedIn () {
+    let token = sessionStorage.getItem('Bearer');
+
+    if (token != undefined) {
+        $(location).attr('href', "./home.html");
+    }
+}
+
+$(checkIfLoggedIn)
+
+
 //set of functions to register user account
 function registerUser () {
     $('.register-form').submit(event => {
