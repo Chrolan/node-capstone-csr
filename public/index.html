@@ -4,23 +4,28 @@
     <meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Service Request System Home</title>
-    <link rel="stylesheet" href="css.css">
+    <link href="grid.css" rel="stylesheet" type="text/css"/>
+
+    <link href="css.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
-    <header class="header" role="banner">
-        <h1>Service Request System</h1>
+    <main class="main" role="main">
 		<nav class="fixed-nav">
-			<div id="nav-bar" class="nav-bar">
-				<ul class="nav-items">
-					<li><a href="./login.html">Login</a></li>
-					<li><a href="./register.html">Register</a></li>
+			<div id="nav-bar" class="nav-bar row">
+				<h1>Service Request System</h1>
+				<ul class="nav-items col-12">
+					<li class="col-12">
+						<input class="submit-button" type="button" value="Login" onclick="window.location.href='./login.html'"/>
+					</li>
+					<li class="col-12">
+						<input class="submit-button" type="button" value="Register" onclick="window.location.href='./register.html'"/>
+					</li>
 				</ul>
 			</div>
 		</nav>
-	</header>
-
-    <main class="main" role="main">
-        <span class="main-description" >The Service Request System will serve customers in their need to house customer, device, circuit requests. Register or Login in to proceed!</span>
+		<div class="col-12 main-description">
+        	<span>The Service Request System will serve customers in their need to house customer, device, circuit requests. Register or Login in to proceed!</span>
+		</div>
     </main>
 
 	<script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>

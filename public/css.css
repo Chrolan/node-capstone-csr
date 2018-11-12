@@ -3,8 +3,79 @@
     font-family: 'Noto Serif', serif;
 }
 
+.main-description {
+  text-align: center;
+}
+
+ul {
+  text-align: center;
+  background-color: white;
+}
+
+
+ul > li {
+  display: block;
+  text-decoration: none;
+  text-align: center;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.submit-button {
+  margin: auto ;
+  width: 50%;
+  background-color: #4CAF50; /* Green */
+  border: 1px solid black;
+  color: white;
+  padding: 14px 40px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 20px;
+  border-radius: 8px;
+}
+
+.submit-button {
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+}
+
+.submit-button:hover, .submit-button:target, .submit-button:focus {
+    background-color: #69ff6d; /* Green */
+    color: black;
+    font-weight: bold;
+}
+
+/* Add a black background color to the top navigation */
+.nav-bar {
+    background-color: #333;
+    overflow: hidden;
+}
+
+/* Style the links inside the navigation bar */
+.nav-bar-items a {
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+}
+
+/* Change the color of links on hover */
+.nav-bar-items a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+/* Add a color to the active/current link */
+.nav-bar-items a.active {
+    background-color: #000000;
+    color: white;
+}
+
 body {
-  background: #878995;
+  background: #fff;
   font-size: 100%;
   line-height: 1;
   padding-top: 30px;
@@ -17,11 +88,11 @@ input, textarea {
 
 /** form field **/
 form {
+  text-align: center;
   display: block;
-  margin: 30px;
+  margin-left: 30px;
+  margin-right: 30px;
   overflow: hidden;
-  background: #fff;
-  border: 1px solid #e4e4e4;
   border-radius: 5px;
 }
 
@@ -37,6 +108,7 @@ legend {
 }
 
 form > fieldset > div > label {
+  text-align: left;
   display: block;
   padding: 10px 10px 10px;
   vertical-align: top;
@@ -61,17 +133,16 @@ label > input, label > select {
   padding: 0;
   border: none;
   outline: none;
-  color: #c7c7c7;
+  color: #4f87c7;
   font-weight: bold;
   font-size: 14px;
-  opacity: .6;
-  transition: all linear .3s;
 }
 
+input:hover, input:focus, input:target,select:hover, select:focus, :target {
+  background-color: #39ff00;
+  font-weight: bolder;
 
-
-label > input:focus, label > select:focus {
-  opacity: 1;
 }
+
 
 

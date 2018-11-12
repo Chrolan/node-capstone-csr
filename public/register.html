@@ -3,31 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <title>Service Request System</title>
+
+    <link href="grid.css" rel="stylesheet" type="text/css"/>
+
+    <link href="css.css" rel="stylesheet" type="text/css"/>
+
 </head>
 <body>
     <main class="main">
         <div class="register-box">
             <form class="register-form" method="post">
-                <h2>User Register Form</h2>
                 <fieldset>
-                    <legend for="username">Username</legend>
-                    <input type="text" id="username" name="username" required/><br>
-                    <legend for="password">Password</legend>
-                    <input type="password" id="password" name="password" required/><br>
-                    <legend for="confirm-password">Confirm Password</legend>
-                    <input type="password" id="confirm-password" name="confirm-password"/><br>
-                    <legend for="first-name">First Name</legend>
-                    <input type="text" id="first-name" name="first-name" required/><br>
-                    <legend for="last-name">Last Name</legend>
-                    <input type="text" id="last-name" name="last-name" required/><br>
-                    <legend for="email">Email</legend>
-                    <input type="text" id="email" name="email" required/><br>
-                    <legend for="phone">Phone Number</legend>
-                    <input type="text" id="phone" name="phone" required/><br>
-                    <legend for="company-name">Company Name</legend>
-                    <input type="text" id="company-name" name="company-name" required/><br>
-                    <legend for="user-type">User Type</legend>
-                    <input type="text" id="user-type" name="user-type" required/><br>
+                    <legend><h2>User Register Form</h2></legend>
+                    <div class="col-6">
+                        <label for="username">Username
+                            <input type="text" id="username" name="username" required/>
+                        </label>
+                    </div>
+                    <div class="col-6">
+                        <label for="password">Password
+                            <input type="password" id="password" name="password" required/>
+                        </label>
+                    </div>
+                    <div class="col-6">
+                        <label for="confirm-password">Confirm Password
+                            <input type="password" id="confirm-password" name="confirm-password"/>
+                        </label>
+                    </div>
+                    <div class="col-6">
+                        <label for="first-name">First Name
+                            <input type="text" id="first-name" name="first-name" required/>
+                        </label>
+                    </div>
+                    <div class="col-6">
+                        <label for="last-name">Last Name
+                            <input type="text" id="last-name" name="last-name" required/>
+                        </label>
+                    </div>
+                    <div class="col-6">
+                        <label for="email">Email
+                            <input type="text" id="email" name="email" required/>
+                        </label>
+                    </div>
+                    <div class="col-6">
+                        <label for="phone">Phone Number
+                            <input type="text" id="phone" name="phone" required/>
+                        </label>
+                    </div>
+                    <div class="col-6">
+                        <label for="company-name">Company Name
+                            <input type="text" id="company-name" name="company-name" required/>
+                        </label>
+                    </div>
+                    <div class="col-6">
+                        <label for="user-type">User Type
+                            <input type="text" id="user-type" name="user-type" required/>
+                        </label>
+                    </div>
                     <button type="submit">Register</button>
                 </fieldset>
             </form>

@@ -127,7 +127,7 @@ $(createDevicesPage);
 //building individual field sets per type of data schema, this will allow for calling on separate pages w/o having to repeat code
 //make sure schema required fields are required on form input, this will reduce the # of UX complaints from form errors
 function formBuild () {
-    return `<form class="record-submit">
+    return `<form class="record-submit row">
                 <h2 class="creation-banner"></h2>
                 <input id="request-submit-button" class="submit-button" type="submit"/>
             </form>`
@@ -136,7 +136,7 @@ function formBuild () {
 function customerBuildFieldSet () {
 
     return `
-            <fieldset class="customer-fields row">
+            <fieldset class="customer-fields">
             <legend class="col-12">End Customer Details</legend>
                 <div class="col-6">
                     <label for="customer-type">Customer Type
