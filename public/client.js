@@ -1,3 +1,14 @@
+//function for navbar
+function navBarFunction() {
+    var x = document.getElementById("nav-bar");
+    if (x.className === "nav-bar row") {
+        x.className += " responsive";
+    } else {
+        x.className = "nav-bar row";
+    }
+}
+
+
 //upon clicking of 'my requests' hyperlink, will search for submitted requests and return in table format
 function renderRequestItem (data) {
 
@@ -7,25 +18,27 @@ function renderRequestItem (data) {
     return `<tr class="request-item">
                 <td>${newDate}</td>
                 <td>${data.request.customerReferenceNumber}</td>
-                <td>${data.request.customerCompanyName}</td>
                 <td>${data.request.service.customer.customerName.lastName} , ${data.request.service.customer.customerName.firstName}</td>
                 <td>${data.request.service.circuit.circuitId}</td>
             </tr>`
 }
 //headers for table
 function renderTableHeaders () {
-    return `<table class="request-table">
-                <tr class="table-headers">
-                    <th>Submit Date</th>
-                    <th>Reference Number</th>
-                    <th>Company Name</th>
-                    <th>Customer</th>
-                    <th>Circuit Id</th>
-                </tr>
-            </table>`
+    return `<div class="table-div">
+                <table class="request-table row">
+                    <thead>
+                        <tr class="table-headers">
+                            <th>Submit Date</th>
+                            <th>Reference Number</th>
+                            <th>Customer</th>
+                            <th>Circuit Id</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>`
 }
 //passes headers to container, then passes request GET info through that to create table
-function displaRequests (data) {
+function displayRequests (data) {
     let listResults = data.requests.map((item,index) => renderRequestItem(item));
     //inserts the mapped items into requests list
     $('.content-box').html(renderTableHeaders);
@@ -44,7 +57,7 @@ function getMyRequests () {
         }
     })
         .then(data => {
-            displaRequests(data)
+            displayRequests(data)
         })
         .catch(err => {
             console.log(err);
@@ -77,15 +90,19 @@ function renderDeviceItem (data) {
 }
 //headers for table
 function renderDeviceTableHeaders () {
-    return `<table class="request-table">
-                <tr class="table-headers">
-                    <th>Device Name</th>
-                    <th>Manufacturer</th>
-                    <th>Model</th>
-                    <th>Serial Number</th>
-                    <th>MAC Address</th>
-                </tr>
-            </table>`
+    return `<div class="table-div">
+                <table class="request-table row">
+                    <thead>
+                        <tr class="table-headers">
+                            <th>Device Name</th>
+                            <th>Manufacturer</th>
+                            <th>Model</th>
+                            <th>Serial Number</th>
+                            <th>MAC Address</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>`
 }
 //passes headers to container, then passes request GET info through that to create table
 function displayDevices (data) {

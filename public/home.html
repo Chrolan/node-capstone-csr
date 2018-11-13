@@ -11,15 +11,20 @@
     <title>Title</title>
 </head>
 <body>
-    <header class="header" >
-        <nav role="navigation" class="nav-bar row">
+    <header class="header" role="banner">
+        <h1>Service Request System</h1>
+        <nav role="navigation" id="nav-bar" class="nav-bar row">
             <div class="nav-bar-items">
+                    <a href="#" id="home" class="nav-button col-2">Home</a>
                     <a href="#" id="my-requests-button" class="nav-button col-2">My Requests</a>
                     <a href="#" id="submit-request-page-button" class="nav-button col-2">Submit Request</a>
                     <a href="#" id="customer-request-page-button" class="nav-button col-2">Customer Creation</a>
                     <a href="#" id="my-devices-page-button" class="nav-button col-2">My Devices</a>
                     <a href="#" id="device-request-page-button" class="nav-button col-2">Device Creation</a>
                     <a href="#" id="logout-button" class="nav-button col-2">Logout</a>
+                    <a href="javascript:void(0);" class="icon" onclick="navBarFunction()">
+                        <img src="/assets/menu%20icon.png">
+                    </a>
             </div>
         </nav>
     </header>

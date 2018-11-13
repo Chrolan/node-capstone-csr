@@ -24,14 +24,13 @@ $(userAuth);
 
 
 function logOutCustomer () {
-    $('.logout-').submit(event => {
+    $('#logout-button').on('click', event => {
 
         event.preventDefault();
 
-        sessionStorage.removeItem("Bearer")
+        sessionStorage.removeItem("Bearer");
 
-        $(location).attr('href', pageName);
-
-}
+        $(location).attr('href', "./index.html");
+})}
 
 $(logOutCustomer);

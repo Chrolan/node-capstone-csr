@@ -4,17 +4,20 @@
     <meta charset="UTF-8">
     <title>Service Request System</title>
 
-    <link href="grid.css" rel="stylesheet" type="text/css"/>
-
     <link href="css.css" rel="stylesheet" type="text/css"/>
+
+    <link href="grid.css" rel="stylesheet" type="text/css"/>
 
 </head>
 <body>
+    <header class="header" role="banner">
+        <h1>Service Request System</h1>
+    </header>
     <main class="main">
         <div class="register-box">
             <form class="register-form" method="post">
                 <fieldset>
-                    <legend><h2>User Register Form</h2></legend>
+                    <legend>User Registeration</legend>
                     <div class="col-6">
                         <label for="username">Username
                             <input type="text" id="username" name="username" required/>
@@ -55,12 +58,7 @@
                             <input type="text" id="company-name" name="company-name" required/>
                         </label>
                     </div>
-                    <div class="col-6">
-                        <label for="user-type">User Type
-                            <input type="text" id="user-type" name="user-type" required/>
-                        </label>
-                    </div>
-                    <button type="submit">Register</button>
+                    <button type="submit" class="submit-button">Register</button>
                 </fieldset>
             </form>
         </div>
