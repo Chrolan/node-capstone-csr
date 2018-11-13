@@ -1,4 +1,4 @@
-//function for navbar
+//functions for navbar
 function navBarFunction() {
     var x = document.getElementById("nav-bar");
     if (x.className === "nav-bar row") {
@@ -7,6 +7,16 @@ function navBarFunction() {
         x.className = "nav-bar row";
     }
 }
+
+$('.nav-bar-items > a').on('click', function(event){
+    // First we take away the background color (selection) from the <li>
+    $('.selectedNavElement').removeClass('selectedNavElement');
+
+    let $currentElement = $(this);
+
+    // We update the just clicked <li> with the background color
+    $currentElement.addClass('selectedNavElement');
+});
 
 
 //upon clicking of 'my requests' hyperlink, will search for submitted requests and return in table format

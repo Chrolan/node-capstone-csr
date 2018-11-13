@@ -1,0 +1,9 @@
+language: node_js
+node_js: node
+deploy: pure-oasis-55665
+  provider: heroku
+  api_key:
+    secure: Lil+ICJ05DiyX80zc5dkQoOxztuv6zN8c7vKmnMYt4xSjy8rXCqdnlrYtHsXH5oJ5uxEyPPJO4/R4t29GA4XIvysHdj6vh0GoDtKZH1EaivWhxBKBDPugKyWs++WXIqZtXgZWDF6JLdIDlTEVm6VFW6VQDKQpr1ow1+t/ATIDvlsNtsWAEJv/p71JHkpEpQCItrVoSUE2VY7oLMqcpbwezsch4MWIC9fUIVC7el5xPxloMBpCIwopmKou+NrgVtM11teZ+DBAx6mUDACThnf31UWFtHD+nP4SHV2Ca3A0R9kNMrwjdQEc/5hLnmrmTvaSg2FtAqz80OWWvm8LMoDK9GvR2uqXZrINvHGbtilIcmtp/cjKwPJkw60NqL12Alj9aEcSuTL1lNaeiVb24rnqIGfL6he7UtpMlsZJIvoU6pvhI3GDs6Y/02YJ5IkvNrp0PpCEupw+IcK/YKa8UoymOE19EwXlkTpnPaOf+LZ6lOVwAgdyIeRnoUKeV8Sh3einzxp1DL/4gSyrFopu0+hwU+FHlIRvvX5asPvKvIPjN4Kcj1CvGiFqPrb40tRmS78nGd3LxELIOg49aIl2Pn+LbjQyjMKtrMYL6QkiAoQkS+M3aMUaOk5I/bY03fBOABtaQkOzWyvTb/W7iylmuBVO6wkLW3hYKJlHUR315SSZ5A=
+  app: blog-api
+  on:
+    repo: Chrolan/node-capstone-csr

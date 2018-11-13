@@ -69,15 +69,14 @@ ul > li {
 }
 
 /* Change the color of links on hover */
-.nav-bar-items a:hover,.nav-bar-items a:focus,.nav-bar-items a:target {
+.nav-bar-items a:hover,.nav-bar-items a:focus,.nav-bar-items a:target{
     background-color: #ddd;
     color: black;
 }
 
-/* Add a color to the active/current link */
-.nav-bar-items a.active {
-    background-color: #000000;
-    color: white;
+.selectedNavElement {
+    background-color: #ddd;
+    color: black;
 }
 
 body {

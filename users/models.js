@@ -12,7 +12,7 @@ const UserSchema = mongoose.Schema({
     email : {type: String, required: true},
     phone: {type: String, required: true},
     companyName: {type: String, required: true},
-    typeOfUser: {type: String, required: true}
+    typeOfUser: {type: String, required: true, default: 'user'}
 });
 
 UserSchema.methods.validatePassword = function(password) {
