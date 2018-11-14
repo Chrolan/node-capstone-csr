@@ -102,7 +102,7 @@ router.post('/', jsonParser, (req,res) => {
 });
 
 //will be able to update device by obj id
-router.put('/device/:id', jsonParser, (req,res) => {
+router.put('/:id', jsonParser, (req,res) => {
 
     if (!(req.params.id && req.body.id && req.params.id === req.body.id)) {
     const message = (
