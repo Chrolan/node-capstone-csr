@@ -67,7 +67,7 @@ router.post('/', jsonParser, (req,res) => {
                         customerStreet1: req.body.customerAddress.customerStreet1,
                         customerStreet2: req.body.customerAddress.customerStreet2,
                         customerCity: req.body.customerAddress.customerCity,
-                        customerState: req.body.customerAddress.customerZip,
+                        customerState: req.body.customerAddress.customerState,
                         customerZip: req.body.customerAddress.customerZip
                     },
                     customerBillingAccount: req.body.customerBillingAccount,
@@ -80,11 +80,7 @@ router.post('/', jsonParser, (req,res) => {
                     authorizedSubmitter: req.user.id,
                 })
                     .then(customer => {
-                        res.status(200).json({
-                            customerName: customer.customerName,
-                            customerType: customer.customerType,
-                            customerBillingAccount: customer.customerBillingAccount
-                        });
+                        res.status(200).json(customer);
                     })
                     .catch(err => {
                         console.log(err);
@@ -100,7 +96,7 @@ router.post('/', jsonParser, (req,res) => {
 
 router.put('/:id', jsonParser, (req,res) => {
 
-    if (!(req.params.id && req.body.id && req.params.id === req.body.id)) {
+    if (!(req.params.id && req.body._id && req.params.id === req.body._id)) {
     const message = (
       `Request path id (${req.params.id}) and request body id ` +
       `(${req.body.id}) must match`);
@@ -110,7 +106,7 @@ router.put('/:id', jsonParser, (req,res) => {
   }
     const toUpdate = {};
 
-    const updateableFields = ['customerClient', 'customerType', 'customerName', 'customerAddress ', 'customerBillingAccount', 'customerPhone', 'customerSiteGps', 'customerEntryGps', 'customerAddressNote', 'customerGateCode']
+    const updateableFields = [ 'customerType', 'customerName', 'customerAddress ', 'customerBillingAccount', 'customerPhone', 'customerSiteGps', 'customerEntryGps', 'customerAddressNote', 'customerGateCode'];
 
     updateableFields.forEach(field => {
         if (field in req.body) {
@@ -118,9 +114,12 @@ router.put('/:id', jsonParser, (req,res) => {
         }
       });
 
-    Customer
-        .findByIdAndUpdate(req.params.id, {$set: toUpdate})
-        .then(customer => res.status(204).end())
+    Customer.findOne({_id:req.params.id})
+        .then(customer => {
+            Customer.update({$set: toUpdate})
+                .then(returned => res.status(204).json(returned))
+                .catch(err => res.status(500).json({message: 'Internal server error'}));
+    })
         .catch(err => res.status(500).json({message: 'Internal server error'}));
 
 });
@@ -133,7 +132,7 @@ router.delete('/', jsonParser, (req,res) => {
             console.log(customer);
              if(customer != null && Object.keys(customer).length > 0) {
                 Customer.deleteOne(customer)
-                    .then(res.status(400).json({message:'Success'}))
+                    .then(res.status(204).json({message:'Success'}))
                     .catch(err => {
                             console.log(err);
                             res.status(500).json({message: 'Error deleting user'})
@@ -149,13 +148,13 @@ router.delete('/', jsonParser, (req,res) => {
 });
 
 //delete end point by using only ID
-router.delete('/customer/:id', jsonParser, (req,res) => {
+router.delete('/:id', jsonParser, (req,res) => {
 
     Customer.findOne({_id:req.params.id})
         .then(customer => {
             if(customer != null && Object.keys(customer).length > 0) {
                 Customer.deleteOne(customer)
-                    .then(res.status(400).json({message: 'Success'}))
+                    .then(res.status(204).json({message: 'Success'}))
                     .catch(err => {
                         console.log(err);
                         res.status(500).json({message: 'Error deleting customer'})

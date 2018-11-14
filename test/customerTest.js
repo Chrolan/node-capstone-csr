@@ -1,46 +1,73 @@
 const chai = require("chai");
 const chaiHttp = require("chai-http");
-
+const jwt = require('jsonwebtoken');
 const { app, runServer, closeServer } = require("../server");
+const {User} = require('../users');
+const { DATABASE_URL, JWT_SECRET } = require('../config');
+const mongoose = require('mongoose');
 
 const expect = chai.expect;
 
 chai.use(chaiHttp);
 
-describe("Blog List", function() {
+function tearDownDb() {
+    console.warn('Deleting database');
+    return mongoose.connection.dropDatabase();
+}
+
+
+describe("Customers", function() {
+  const username = 'jkleriga';
+  const password = 'examplePass';
+  const firstName = 'Example';
+  const lastName = 'User';
+  const email = 'jordikleriga@gmail.com';
+  const companyName = 'FNC';
+  const phone = '469-826-4444';
+
   before(function() {
-    return runServer();
+    return runServer(DATABASE_URL);
+  });
+    before(function() {
+    return tearDownDb();
+  });
+  before(function() {
+    return User.hashPassword(password).then(password =>
+      User.create({
+        username,
+        password,
+        firstName,
+        lastName,
+        email,
+        companyName,
+        phone
+      })
+    );
+  });
+
+  after(function() {
+    return User.remove({});
+  });
+    after(function() {
+    return tearDownDb();
   });
   after(function() {
     return closeServer();
   });
 
-  // test strategy:
-  //   1. make request to `/customers`
-  //   2. inspect response object and prove has right code and have
-  //   right keys in response object.
-  it("should list items on GET", function() {
-    return chai
-      .request(app)
-      .get("/customers")
-      .then(function(res) {
-        expect(res).to.have.status(200);
-        expect(res).to.be.json;
-        expect(res.body).to.be.a("array");
+  let token = jwt.sign({
+      user: {
+        username,
+        firstName,
+        lastName
+      },
+    }, JWT_SECRET, {
+      algorithm: 'HS256',
+      subject: username,
+      expiresIn: '7d'
+    });
 
-        // because we create three items on app load
-        expect(res.body.length).to.be.at.least(1);
-        // each item should be an object with key/value pairs
-        // for `id`, `name` and `checked`.
-        const expectedKeys = ['customerType', 'customerName', 'customerAddress', 'customerBillingAccount'];
-        res.body.forEach(function(item) {
-          expect(item).to.be.a("object");
-          expect(item).to.include.keys(expectedKeys);
-        });
-      });
-  });
-
-  // test strategy:
+      // test strategy:
   //  1. make a POST request with data for a new item
   //  2. inspect response object and prove it has right
   //  status code and that the returned object has an `id`
@@ -59,25 +86,46 @@ describe("Blog List", function() {
                     },
                     customerBillingAccount: "65400",
                     customerPhone: "469-826-4133",
-                    customerSiteGps: "",
-                    customerEntryGps: "",
+                    customerSiteGps: 54654,
+                    customerEntryGps: 546516,
                     customerAddressNote: "Added 1 note",
-                    customerGateCode: ""};
+                    customerGateCode: "16534"};
     return chai
       .request(app)
       .post("/customers")
       .send(newItem)
+      .set('authorization', `Bearer ${token}`)
       .then(function(res) {
-        expect(res).to.have.status(201);
+        expect(res).to.have.status(200);
         expect(res).to.be.json;
         expect(res.body).to.be.a("object");
         expect(res.body).to.include.keys('customerName', 'customerType', 'customerBillingAccount');
         expect(res.body.id).to.not.equal(null);
-        // response should be deep equal to `newItem` from above if we assign
-        // `id` to it from `res.body.id`
-        expect(res.body).to.deep.equal(
-          Object.assign(newItem, { id: res.body.id })
-        );
+      });
+  });
+
+
+    // test strategy:
+  //   1. make request to `/customers`
+  //   2. inspect response object and prove has right code and have
+  //   right keys in response object.
+  it("should list items on GET", function() {
+    return chai
+      .request(app)
+      .get("/customers")
+      .set('authorization', `Bearer ${token}`)
+      .then(function(res) {
+        expect(res).to.have.status(200);
+        expect(res).to.be.json;
+        expect(res.body).to.be.a("object");
+
+        expect(res.body.customers.length).to.be.at.least(1);
+
+        const expectedKeys = ['customerType', 'customerName', 'customerAddress', 'customerBillingAccount'];
+        res.body.customers.forEach(function(item) {
+          expect(item).to.be.a("object");
+          expect(item).to.include.keys(expectedKeys);
+        });
       });
   });
 
@@ -90,9 +138,6 @@ describe("Blog List", function() {
   //  has right status code and that we get back an updated
   //  item with the right data in it.
   it("should update items on PUT", function() {
-    // we initialize our updateData here and then after the initial
-    // request to the app, we update it with an `id` property so
-    // we can make a second, PUT call to the app.
     const updateData = { customerType: "DSL",
                     customerName: {
                     	firstName: "Jordi",
@@ -107,25 +152,25 @@ describe("Blog List", function() {
                     },
                     customerBillingAccount: "84641",
                     customerPhone: "469-826-4133",
-                    customerSiteGps: "",
-                    customerEntryGps: "",
+                    customerSiteGps: 65406,
+                    customerEntryGps: 77980,
                     customerAddressNote: "Added 3 note",
-                    customerGateCode: ""};
+                    customerGateCode: "540604"};
     return (
       chai
         .request(app)
         .get("/customers")
+        .set('authorization', `Bearer ${token}`)
         .then(function(res) {
-          updateData.id = res.body[0].id;
+          updateData._id = res.body.customers[0]._id;
           return chai
             .request(app)
-            .put(`/customers/${updateData.id}`)
-            .send(updateData);
+            .put(`/customers/${updateData._id}`)
+            .send(updateData)
+            .set('authorization', `Bearer ${token}`)
         })
-        // prove that the PUT request has right status code
-        // and returns updated item
         .then(function(res) {
-          expect(res).to.have.status(200);
+          expect(res).to.have.status(204);
           expect(res).to.be.json;
           expect(res.body).to.be.a("object");
           expect(res.body).to.deep.equal(updateData);
@@ -141,11 +186,10 @@ describe("Blog List", function() {
     return (
       chai
         .request(app)
-        // first have to get so we have an `id` of item
-        // to delete
         .get("/customers")
+        .set('authorization', `Bearer ${token}`)
         .then(function(res) {
-          return chai.request(app).delete(`/customers/${res.body[0].id}`);
+          return chai.request(app).delete(`/customers/${res.body.customers[0]._id}`).set('authorization', `Bearer ${token}`);
         })
         .then(function(res) {
           expect(res).to.have.status(204);

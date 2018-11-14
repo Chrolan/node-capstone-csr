@@ -41,7 +41,7 @@ app.use(express.static("public"));
 
 app.use('/users', usersRouter);
 app.use('/auth', authRouter);
-app.use('/customers', jwtAuth, customerRouter);
+app.use('/customers',jwtAuth, customerRouter);
 app.use('/devices' ,  jwtAuth, deviceRouter);
 app.use('/circuits', jwtAuth, circuitRouter);
 app.use('/services', jwtAuth, serviceRouter);
