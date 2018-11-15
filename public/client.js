@@ -16,6 +16,8 @@ $('.nav-bar-items > a').on('click', function(event){
 
     // We update the just clicked <li> with the background color
     $currentElement.addClass('selectedNavElement');
+
+    $('.js-error-message-box').empty()
 });
 
 
@@ -504,6 +506,12 @@ function ajaxCustomer (customer,callback) {
                 data: JSON.stringify(customer),
                 headers: {
                     Authorization: `Bearer ${sessionStorage.getItem('Bearer')}`
+                },
+                success: function (data) {
+                    sendAlert(data)
+                },
+                error: function (data) {
+                    sendError(data)
                 }
             })
 }
@@ -514,7 +522,7 @@ function postCustomer () {
 
         event.preventDefault();
 
-        ajaxCustomer(createCustomerJson(),sendAlert())
+        ajaxCustomer(createCustomerJson())
 
     })
 }
@@ -559,8 +567,14 @@ function ajaxDevice (device) {
                 data: JSON.stringify(device),
                 headers: {
                     Authorization: `Bearer ${sessionStorage.getItem('Bearer')}`
+                },
+                success: function (data) {
+                    sendAlert(data)
+                },
+                error: function (data) {
+                    sendError(data)
                 }
-            })
+        })
 }
 
 function postDevice (location) {
@@ -569,7 +583,7 @@ function postDevice (location) {
 
         event.preventDefault();
 
-        ajaxDevice(createDeviceJson(location),sendAlert())
+        ajaxDevice(createDeviceJson(location))
 
     })
 }
@@ -710,9 +724,11 @@ function postRequest () {
 
         event.preventDefault();
 
+        $('.js-error-message-box').empty();
+
         ajaxCustomer(createCustomerJson())
             .catch(err => {
-                console.log(err.responseJSON.message);
+                return err
             })
             .then(function () {
                 return ajaxDevice(createDeviceJson("Z"))
@@ -742,13 +758,17 @@ function postRequest () {
                 return ajaxRequest(createRequestJson())
             })
             .catch(err => {
-                console.log(err.responseJSON.message);
+                $('.js-error-message-box').append(`<span>${err.responseJSON.message}</span>`);
             })
     })
 }
 
-function sendAlert () {
-    return console.log('POST worked')
+function sendAlert (data) {
+    $('.js-error-message-box').append(`<span>${data.message}</span><br>`)
+}
+
+function sendError (data) {
+    $('.js-error-message-box').append(`<span>${data.responseJSON.message}</span><br>`)
 }
 
 $(createDeviceForm);

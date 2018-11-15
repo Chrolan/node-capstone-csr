@@ -54,7 +54,7 @@ router.post('/', jsonParser, (req,res) => {
     });
 
     //First finds customer based on 3 attributes, if none found then creates. Cannot find based on ID because you won't know it at the time of creating new customer
-    Customer.findOne({'customerName.lastName':req.body.customerName.lastName, customerClient:req.body.customerClient, customerBillingAccount: req.body.customerBillingAccount})
+    Customer.findOne({'customerName.lastName':req.body.customerName.lastName, customerBillingAccount: req.body.customerBillingAccount})
         .then(customer => {
             if(customer != null && Object.keys(customer).length > 0) {
                 res.status(400).json({message: 'Customer already exists'})
@@ -83,7 +83,6 @@ router.post('/', jsonParser, (req,res) => {
                         res.status(200).json(customer);
                     })
                     .catch(err => {
-                        console.log(err);
                         res.status(500).json({message: 'Could not create'})
                     })
             }
@@ -100,7 +99,6 @@ router.put('/:id', jsonParser, (req,res) => {
     const message = (
       `Request path id (${req.params.id}) and request body id ` +
       `(${req.body.id}) must match`);
-    console.error(message);
 
     return res.status(400).json({message: message});
   }
@@ -134,7 +132,6 @@ router.delete('/', jsonParser, (req,res) => {
                 Customer.deleteOne(customer)
                     .then(res.status(204).json({message:'Success'}))
                     .catch(err => {
-                            console.log(err);
                             res.status(500).json({message: 'Error deleting user'})
                         })
             }
@@ -142,7 +139,6 @@ router.delete('/', jsonParser, (req,res) => {
                 res.status(400).json({message: 'Customer does not exist'})
             }})
         .catch(err => {
-            console.log(err);
             res.status(500).json({message: 'Server Error'})
         })
 });
@@ -156,7 +152,6 @@ router.delete('/:id', jsonParser, (req,res) => {
                 Customer.deleteOne(customer)
                     .then(res.status(204).json({message: 'Success'}))
                     .catch(err => {
-                        console.log(err);
                         res.status(500).json({message: 'Error deleting customer'})
                     })
             }

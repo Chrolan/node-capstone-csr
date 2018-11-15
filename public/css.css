@@ -78,6 +78,11 @@ ul > li {
     background-color: #ddd;
     color: black;
 }
+.register-message, .js-registration-comment-box, .js-error-message-box {
+    text-align: center;
+    font-weight: bold;
+    padding-top: 15px;
+}
 
 body {
   background: #fff;

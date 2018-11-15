@@ -88,7 +88,7 @@ router.post('/', jsonParser, (req,res) => {
                         authorizedSubmitter: req.user.id
 				    })
                     .then(device => {
-                        res.status(200).json(device.serialize());
+                        res.status(200).json({message: 'Device has been created!'});
                     })
                     .catch(err => {
                         console.log(err);
