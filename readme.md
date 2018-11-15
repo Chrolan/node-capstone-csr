@@ -3,6 +3,8 @@
 <p>This project is focused on being able to create Telecom customer records. This system would allow us to enter in devices the customer
 uses on both ends of a circuit and house information regarding services that ride each one circuit. This allows the ISP to house a front end for their customers to submit their service requests.</p>
 
+<p> Link to heroku live app <a href="https://pure-oasis-55665.herokuapp.com/">here</a>
+
 <h2> Technologies used</h2>
 <ul>
 <li>HTML</li>
