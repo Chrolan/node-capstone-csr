@@ -255,12 +255,12 @@ function deviceBuildFieldSet (location) {
             <legend class="col-12"> ${location} Device Details</legend>
                 <div class="col-6">
                     <label for="${location}-device-name">Device Name
-                        <input id="${location}-device-name"/>
+                        <input required id="${location}-device-name"/>
                     </label>
                 </div>
                 <div class="col-6">
                     <label for="${location}-device-manufacturer">Device Manufacturer
-                        <select id="${location}-device-manufacturer">
+                        <select required id="${location}-device-manufacturer">
                             <option value="Calix">Calix</option>
                             <option value="Fujitsu">Fujitsu</option>
                             <option value="Juniper">Juniper</option>
@@ -270,7 +270,7 @@ function deviceBuildFieldSet (location) {
                 </div>
                 <div class="col-6">
                     <label for="${location}-device-model">Device Model
-                        <select id="${location}-device-model">
+                        <select required id="${location}-device-model">
                             <option value="E7">E7</option>
                             <option value="MX480">Fujitsu</option>
                             <option value="9500">Juniper</option>
@@ -280,22 +280,22 @@ function deviceBuildFieldSet (location) {
                 </div>
                 <div class="col-6">
                     <label for="${location}-device-port">Device Port
-                        <input id="${location}-device-port"/>
+                        <input required id="${location}-device-port"/>
                     </label>
                 </div>
                 <div class="col-6">
                     <label for="${location}-device-serial">Device Serial
-                        <input id="${location}-device-serial"/>
+                        <input required id="${location}-device-serial"/>
                     </label>
                 </div>
                 <div class="col-6">
                     <label for="${location}-device-ip">Device IP
-                        <input id="${location}-device-ip"/>
+                        <input required id="${location}-device-ip"/>
                     </label>
                 </div>
                 <div class="col-6">
                     <label for="${location}-device-mac">Device Mac
-                        <input id="${location}-device-mac"/>        
+                        <input required id="${location}-device-mac"/>        
                     </label>
                 </div>        
             </fieldset>`
@@ -306,42 +306,42 @@ function serviceBuildFieldSet () {
             <legend class="col-12">Service Details</legend>
                 <div class="col-6">
                     <label for="service-type">Service Type
-                        <input id="service-type" />
+                        <input required id="service-type" />
                     </label>
                 </div> 
                 <div class="col-6">
                     <label for="media-type">Media Type
-                        <input id="media-type" />
+                        <input required id="media-type" />
                     </label>
                 </div> 
                 <div class="col-6">
                     <label for="bandwidth">Bandwidth
-                        <input id="bandwidth" />
+                        <input required id="bandwidth" />
                     </label>
                 </div> 
                 <div class="col-6">
                     <label for="circuit-id">Circuit Id
-                        <input id="circuit-id" />
+                        <input required id="circuit-id" />
                     </label>
                 </div> 
                 <div class="col-6">
                     <label for="circuit-id-comment">Circuit Id Comments
-                        <input id="circuit-id-comment" />
+                        <input required id="circuit-id-comment" />
                     </label>
                 </div> 
                 <div class="col-6">
                     <label for="department-id">Department Id
-                        <input id="department-id"/>
+                        <input required id="department-id"/>
                     </label>
                 </div> 
                 <div class="col-6">
                     <label for="data-vlan">VLAN (Data)
-                        <input id="data-vlan" />
+                        <input required id="data-vlan" />
                     </label>
                 </div> 
                 <div class="col-6">
                     <label for="-voice-vlan">VLAN (Voice)
-                        <input id="voice-vlan" />
+                        <input required id="voice-vlan" />
                     </label>
                 </div> 
                 <div class="col-6">
@@ -351,32 +351,32 @@ function serviceBuildFieldSet () {
                 </div> 
                 <div class="col-6">
                     <label for="data-center">Data Center
-                        <input id="data-center" />
+                        <input required id="data-center" />
                     </label>
                 </div> 
                 <div class="col-6">
                     <label for="distribution-area">Distribution Area
-                        <input id="distribution-area" />
+                        <input required id="distribution-area" />
                     </label>
                 </div> 
                 <div class="col-6">
                     <label for="da-device-name">DA Device Name
-                        <input id="da-device-name" />
+                        <input required id="da-device-name" />
                     </label>
                 </div> 
                 <div class="col-6">
                     <label for="fiber-datacenter">Fiber to DataCenter
-                        <input id="fiber-datacenter" />
+                        <input required id="fiber-datacenter" />
                     </label>
                 </div> 
                 <div class="col-6">
                     <label for="splitter-pigtail">Splitter Pigtail
-                        <input id="splitter-pigtail" />
+                        <input required id="splitter-pigtail" />
                     </label>
                 </div> 
                 <div class="col-6">
                     <label for="fiber-ont">Fiber to ONT
-                        <input id="fiber-ont" />
+                        <input required id="fiber-ont" />
                     </label>
                 </div> 
             </fieldset>`
@@ -387,22 +387,22 @@ function requestBuildFieldSet () {
             <legend class="col-12">Service Request General Information</legend>
                 <div class="col-6">
                     <label for="request-number">Request Number
-                        <input id="request-number" />
+                        <input required id="request-number" />
                     </label>
                 </div> 
                 <div class="col-6"> 
                     <label for="customer-reference-number">Customer Reference Number
-                        <input id="customer-reference-number" />
+                        <input required id="customer-reference-number" />
                     </label>
                 </div> 
                 <div class="col-6">
                     <label for="request-requested-date">Request Provisioning Date
-                        <input id="request-requested-date" type="date"/>
+                        <input required id="request-requested-date" type="date"/>
                     </label>
                 </div> 
                 <div class="col-6">
                     <label for="target-install-date">Target Install Date
-                        <input id="target-install-date" type="date"/>
+                        <input required id="target-install-date" type="date"/>
                     </label>
                 </div> 
             </fieldset>
@@ -411,22 +411,22 @@ function requestBuildFieldSet () {
             <legend class="col-12">Service Request Details</legend>
                 <div class="col-6">
                     <label for="service-request-type">Service Request Type
-                        <input id="service-request-type"/>
+                        <input required id="service-request-type"/>
                     </label>
                 </div> 
                 <div class="col-6">
                     <label for="service-request-priority">Service Request Priority
-                        <input id="service-request-priority"/>
+                        <input required id="service-request-priority"/>
                     </label>
                 </div> 
                 <div class="col-6">
                     <label for="service-request-details">Service Request Details
-                        <input id="service-request-details"/>
+                        <input required id="service-request-details"/>
                     </label>
                 </div> 
                 <div class="col-6">
                     <label for="service-affecting-yes-no">Service Affecting?
-                        <select id="service-affecting-yes-no">
+                        <select required id="service-affecting-yes-no">
                             <option value="false">No</option>
                             <option value="true">Yes</option>
                         </select>  
@@ -439,7 +439,7 @@ function requestBuildFieldSet () {
                 </div>
                 <div class="col-6">
                     <label for="service-protected-yes-no">Service Protected?
-                        <select id="service-protected-yes-no">
+                        <select required id="service-protected-yes-no">
                             <option value="false">No</option>
                             <option value="true">Yes</option>
                         </select>
